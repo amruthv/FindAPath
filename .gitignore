@@ -1,0 +1,15 @@
+# binaries
+/bin
+
+#eclipse
+.classpath
+.project
+.settings
+.DS_Store
+
+# vim temporary files
+*.swp
+*.*~
+
+# log files
+*.log
