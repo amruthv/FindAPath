@@ -29,5 +29,4 @@ public class Link {
 		packets.remove(p);
 		capacity--;
 	}
-	
 }

@@ -17,24 +17,21 @@ import java.awt.event.MouseWheelEvent;
 import java.awt.event.MouseWheelListener;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.Line2D;
-import java.awt.geom.Path2D;
-import java.awt.geom.Rectangle2D;
-import java.awt.geom.Rectangle2D.Double;
-import java.io.IOException;
-import java.text.ParseException;
-import java.util.ArrayList;
-import java.util.List;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 
+import network.Graph;
 import network.Link;
+import network.Node;
 
 import utils.Point;
 
 public class RobotGraph extends JFrame {
     private PaintablePanel p;
 
+    private Graph graph;
+    
     private static final int FRAME_HEIGHT = 900;
     private static final int FRAME_WIDTH = 900;
     private static final double MAG_INCREMENT_PER_MOUSE_WHEEL_NOTCH = 1.05;
@@ -224,12 +221,27 @@ public class RobotGraph extends JFrame {
             // draw the grid
             drawGrid(g);
             drawAxes(g);
+            
+            paintLinks(g);
+            paintNodes(g);
 
+        }
+        
+        private void paintLinks(Graphics2D g) {
+            for (Node n : graph.nodes)
+                for (Link l : n.links)
+                    paintLink(g, l, Color.blue);
+        }
+        
+        private void paintNodes(Graphics2D g) {
+            for (Node n : graph.nodes)
+                paintPoint(g, n.loc, Color.red);
         }
 
         // draw edge
-        private void paintEdge(Graphics2D g, Link l, Color c) {
+        private void paintLink(Graphics2D g, Link l, Color c) {
             g.setColor(c);
+            g.draw(new Line2D.Double(l.start.loc, l.end.loc));
         }
         
         // draws a poing on the graph in a particular color
