@@ -10,6 +10,17 @@ public class Node {
     
     public Node(double xsize, double ysize) {
         links = new ArrayList<Link>();
-        
+    }
+    
+    public void addLink(Node other) {
+    	links.add(new Link(this, other));
+    }
+    
+    public Point getLoc() {
+    	return loc;
+    }
+    
+    public double getDistance(Node other) {
+    	return loc.distance(other.getLoc());
     }
 }

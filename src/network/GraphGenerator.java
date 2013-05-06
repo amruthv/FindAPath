@@ -8,7 +8,18 @@ public class GraphGenerator {
 	// range is [[xLow, xHigh], [yLow, yHigh]]
 	
 	public static Graph generateCloseConnectGraph(int n, double threshold, double[][] range) {
-		
+		List<Node> nodes = makeRandomPoints(n, range);
+		for (int i = 0; i < n; i++) {
+			for (int j = 0; j < n; j++) {
+				Node n1 = nodes.get(i);
+				Node n2 = nodes.get(j);
+				if (n1.getDistance(n2) <= threshold) {
+					n1.addLink(n2);
+					n2.addLink(n1);
+				}
+			}
+		}
+		return Graph(nodes);
 	}
 	
 	public static Graph generateCloseProbGraph(int n, double[][] range) {
