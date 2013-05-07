@@ -27,7 +27,7 @@ import network.Node;
 
 import utils.Point;
 
-public class RobotGraph extends JFrame {
+public class GraphView extends JFrame {
     private PaintablePanel p;
 
     private Graph graph;
@@ -162,7 +162,9 @@ public class RobotGraph extends JFrame {
         }
     }
 
-    public RobotGraph() {
+    public GraphView(Graph graph) {
+        this.graph = graph;
+        
         // visually bring up the frame
         setPreferredSize(new Dimension(FRAME_WIDTH + 1, FRAME_HEIGHT + 32));
 
@@ -172,7 +174,6 @@ public class RobotGraph extends JFrame {
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         pack();
         setVisible(true);
-
     }
 
     private void setWidgets() {
@@ -229,7 +230,7 @@ public class RobotGraph extends JFrame {
         
         private void paintLinks(Graphics2D g) {
             for (Node n : graph.nodes)
-                for (Link l : n.links)
+                for (Link l : n.outLinks)
                     paintLink(g, l, Color.blue);
         }
         
@@ -241,7 +242,7 @@ public class RobotGraph extends JFrame {
         // draw edge
         private void paintLink(Graphics2D g, Link l, Color c) {
             g.setColor(c);
-            g.draw(new Line2D.Double(l.start.loc, l.end.loc));
+            g.draw(new Line2D.Double(l.fromNode.loc, l.toNode.loc));
         }
         
         // draws a poing on the graph in a particular color
