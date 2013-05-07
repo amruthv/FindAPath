@@ -1,19 +1,29 @@
 package network;
 
-import java.util.ArrayList;
+import java.util.List;
 
 public class Graph {
-	public ArrayList<Node> nodes;
-	public Graph(ArrayList<Node> nodes){
+	
+	public List<Node> nodes;
+	
+	public Graph(List<Node> nodes) {
 		this.nodes = nodes;
 	}
-	public int calcDiameter(){
+	
+	public int calcDiameter() {
 		return 0;
 	}
-	public int[] calcBetweenessCentrality(){
+	
+	public double[] calcBetweenessCentrality() {
 		return null;
 	}
-	public int[] calcEigenvectorCentrality(){
+	
+	public double[] calcEigenvectorCentrality() {
 		return null;
 	}
+	
+	public double calcClusteringCoeff() {
+		return 0;
+	}
+	
 }
