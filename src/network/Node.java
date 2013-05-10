@@ -10,11 +10,20 @@ public class Node {
     public final Point loc;
 	public final Set<Link> inLinks;
 	public final Set<Link> outLinks;
+	private int id;
     
     public Node(double x, double y) {
     	loc = new Point(x, y);
         inLinks = new HashSet<Link>();
         outLinks = new HashSet<Link>();
+    }
+    
+    public void setId(int id) {
+    	this.id = id;
+    }
+    
+    public int getId() {
+    	return id;
     }
     
     public void addLink(Node other) {
