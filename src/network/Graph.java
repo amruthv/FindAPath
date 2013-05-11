@@ -7,6 +7,11 @@ public class Graph {
 	public Graph(ArrayList<Node> nodes){
 		this.nodes = nodes;
 	}
+	
+	public void setRoutingProtocol(){
+		
+	}
+	
 	public int calcDiameter(){
 		return 0;
 	}
