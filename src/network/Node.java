@@ -1,19 +1,37 @@
 package network;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 import utils.Point;
 
 public class Node {
-    public List<Link> links;
-    public Point loc;
-    public List<>
+    public final Point loc;
+	public final Set<Link> inLinks;
+	public final Set<Link> outLinks;
+	private int id;
     
-    public Node(double xsize, double ysize) {
-        links = new ArrayList<Link>();
-        
+    public Node(double x, double y) {
+    	loc = new Point(x, y);
+        inLinks = new HashSet<Link>();
+        outLinks = new HashSet<Link>();
     }
     
-    public 
+    public void setId(int id) {
+    	this.id = id;
+    }
+    
+    public int getId() {
+    	return id;
+    }
+    
+    public void addLink(Node other) {
+    	inLinks.add(new Link(other, this));
+    	outLinks.add(new Link(this, other));
+    }
+    
+    public double getDistance(Node other) {
+    	return loc.distance(other.loc);
+    }
+    
 }
