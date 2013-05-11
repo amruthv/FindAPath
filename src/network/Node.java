@@ -4,6 +4,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 import utils.Point;
+//NODE IDS START AT 0
 
 public class Node {
     public final Point loc;
@@ -32,6 +33,26 @@ public class Node {
     
     public double getDistance(Node other) {
     	return loc.distance(other.loc);
+    }
+    
+    public Link getOutLinkToNode(int nextNodeID){
+    	for (Link l : this.outLinks){
+    		if (l.toNode.getId()==nextNodeID){
+    			return l;
+    		}
+    	}
+    	//No link to that node
+    	return null;
+    }
+    
+    public boolean equals(Node node){
+    	if (this==node){
+    		return true;
+    	}
+    	else if (this.id ==node.id){
+    		return true;
+    	}
+    	return false;
     }
     
 }
