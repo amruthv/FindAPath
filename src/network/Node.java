@@ -1,6 +1,8 @@
 package network;
 
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import utils.Point;
@@ -10,12 +12,14 @@ public class Node {
     public final Point loc;
 	public final Set<Link> inLinks;
 	public final Set<Link> outLinks;
+	public final List<Packet> sourcePackets;
 	private int id;
     
     public Node(double x, double y) {
     	loc = new Point(x, y);
         inLinks = new HashSet<Link>();
         outLinks = new HashSet<Link>();
+        this.sourcePackets = new ArrayList<Packet>();
     }
     
     public void setId(int id) {
@@ -29,6 +33,10 @@ public class Node {
     public void addLink(Node other) {
     	inLinks.add(new Link(other, this));
     	outLinks.add(new Link(this, other));
+    }
+    
+    public void addPacket(Packet p) {
+    	sourcePackets.add(p);
     }
     
     public double getDistance(Node other) {
@@ -46,13 +54,7 @@ public class Node {
     }
     
     public boolean equals(Node node){
-    	if (this==node){
-    		return true;
-    	}
-    	else if (this.id ==node.id){
-    		return true;
-    	}
-    	return false;
+    	return this == node || this.id == node.id;
     }
     
 }
