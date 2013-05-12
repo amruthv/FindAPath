@@ -6,7 +6,7 @@ import Metrics.WorstLink;
 
 public class Main {
     public static void main(String[] args) {
-    	//runSolution();
+    	runSolution();
     	seeGraphs();
     }
     
@@ -27,6 +27,7 @@ public class Main {
     public static Metric[] METRICS = new Metric[]{new WorstLink()};
     
     public static void runSolution() {
+        TrafficAssigner.assignPackets(GRAPH,20000);
     	ROUTER.routeAllNodes(20000, PROTOCOL);
     	for (Metric m : METRICS) 
     		System.out.println(m.score(GRAPH));    	
