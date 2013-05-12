@@ -8,9 +8,8 @@ public class PacketAssigner {
 		Random r = new Random();
 		for (int i = 0; i < p; i++) {
 			Node from = graph.nodes.get(r.nextInt(graph.numNodes));
-			Node to = graph.nodes.get(r.nextInt(graph.numNodes));
-			Packet newPacket = new Packet(from, to, i);
-			from.addSourcePacket(newPacket);
+			int to = r.nextInt(graph.numNodes);
+			from.addTraffic(to);
 		}
 	}	
 }
