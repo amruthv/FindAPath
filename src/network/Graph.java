@@ -4,6 +4,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.ejml.simple.SimpleMatrix;
+
 public class Graph {
 	
 	public List<Node> nodes;
@@ -18,6 +20,9 @@ public class Graph {
 		this.numNodes=this.nodes.size();
 		this.dist = new double[numNodes][numNodes];
 		this.next = new Double[numNodes][numNodes];
+		
+		for (int i = 0; i < nodes.size(); i++)
+			nodes.get(i).setId(i);
 	}
 	
 	
@@ -108,6 +113,22 @@ public class Graph {
 	
 	public double calcClusteringCoeff() {
 		return 0;
+	}
+	
+	public SimpleMatrix getAdjacencyMatrix() {
+		SimpleMatrix a = new SimpleMatrix(nodes.size(), nodes.size());
+		for (Node n : nodes)
+			for (Link l : n.outLinks)
+				a.set(n.getId(), l.toNode.getId(), 1);
+		
+		return a;
+	}
+
+	public double[] pageRank() {
+		  double alpha = 0.04;
+		  SimpleMatrix a = getAdjacencyMatrix();
+		  return null;
+		  //double
 	}
 	
 }
