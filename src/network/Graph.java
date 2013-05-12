@@ -181,8 +181,35 @@ public class Graph {
 		return 0;
 	}
 	
+	public double[] calcDegreeCentrality() {
+		double[] result = new double[nodes.size()];
+		for (int i = 0; i<nodes.size(); i++)
+			result[i] = nodes.get(i).inLinks.size()/(double)nodes.size();;
+		return result;
+	}
+	
 	public double[] calcBetweenessCentrality() {
 		return null;
+	}
+	
+	public double[] calcKatzCentrality() {
+		int n = nodes.size();
+		
+		double alpha = .04;
+		SimpleMatrix a = getAdjacencyMatrix();
+		SimpleMatrix v = new SimpleMatrix(new double[n][1]);
+		for (int i = 0; i<n; i++)
+			v.set(i, 0, 1);
+		
+		SimpleMatrix katz = SimpleMatrix.identity(n);
+		katz = katz.minus(a.scale(alpha).transpose()).invert().mult(v);
+		
+		
+		double[] result = new double[n];
+		for (int i = 0; i < n; i++)
+			result[i] = katz.get(i,0);
+		
+		return result;
 	}
 	
 	public double[] calcEigenvectorCentrality() {

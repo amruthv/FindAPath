@@ -28,6 +28,7 @@ import network.Link;
 import network.Node;
 
 import utils.Point;
+import utils.Utils;
 
 public class GraphView extends JFrame {
 	private PaintablePanel p;
@@ -242,8 +243,15 @@ public class GraphView extends JFrame {
 		}
 
 		private void paintNodes(Graphics2D g) {
-			for (Node n : graph.nodes)
-				paintPoint(g, n.loc, Color.red);
+			//double[] cent = graph.calcDegreeCentrality();
+			double[] cent = graph.calcKatzCentrality();
+			double max = Utils.getMax(cent);
+			Node n;
+			
+			for (int i = 0 ; i < graph.nodes.size(); i++) {
+				n = graph.nodes.get(i);
+				paintPoint(g, n.loc, Color.red, cent[i]/max);
+			}
 		}
 
 		// draw edge
@@ -253,29 +261,13 @@ public class GraphView extends JFrame {
 		}
 
 		// draws a poing on the graph in a particular color
-		private void paintPoint(Graphics2D g, Point p, Color c) {
+		private void paintPoint(Graphics2D g, Point p, Color c, double scale) {
+			double size = 15;
+			size *= scale;
 			g.setColor(c);
-			g.fill(new Ellipse2D.Double(p.x-4, p.y-4, 9, 9));
-		}
-
-		// draws a poing on the graph in a particular color
-		private void paintPointX(Graphics2D g, Point p, Color c) {
-			g.setColor(c);
-			double POINT_RADIUS = 0.05;
-			double xMin = p.x - POINT_RADIUS;
-			double yMin = p.y - POINT_RADIUS;
-
-			double xMax = p.x + POINT_RADIUS;
-			double yMax = p.y + POINT_RADIUS;
-			
-
-			Shape[] shape = new Shape[2];
-			shape[0] = new Line2D.Double(xMin, yMin, xMax, yMax);
-			shape[1] = new Line2D.Double(xMin, yMax, xMax, yMin);
-
-			for (int i = 0; i < shape.length; i++) {
-				g.draw(shape[i]);
-			}
+			g.fill(new Ellipse2D.Double(p.x-size/2, p.y-size/2, size, size));
+			g.setColor(Color.blue);
+			g.draw(new Ellipse2D.Double(p.x-size/2, p.y-size/2, size, size));
 		}
 
 		/**
