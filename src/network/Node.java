@@ -28,6 +28,9 @@ public class Node {
     }
     
     public void addTraffic(int dest) {
+    	if (!selfTraffic.containsKey(dest)){
+    		selfTraffic.put(dest, 0);
+    	}
     	selfTraffic.put(dest, selfTraffic.get(dest) + 1);
     }
     
