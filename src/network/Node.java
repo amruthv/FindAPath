@@ -22,15 +22,15 @@ public class Node {
         selfTraffic = new HashMap<Integer, Integer>();
     }
     
-    public void addLink(Node other) {
-    	inLinks.add(new Link(other, this));
-    	outLinks.add(new Link(this, other));
+    public void addLinks(Link outLink, Link inLink) {
+    	inLinks.add(inLink);
+    	outLinks.add(outLink);
     }
     
     public void addTraffic(int dest) {
-    	if (!selfTraffic.containsKey(dest)){
-    		selfTraffic.put(dest, 0);
-    	}
+    	if (!selfTraffic.containsKey(dest))
+    		selfTraffic.put(dest, 1);
+    	else
     	selfTraffic.put(dest, selfTraffic.get(dest) + 1);
     }
     

@@ -9,7 +9,7 @@ public class WorstLink implements Metric {
 	public double score(Graph g) {
 		double worst = 0;
 		for (Node node: g.nodes) {
-			for (Link link : node.inLinks)
+			for (Link link : node.outLinks)
 				worst = Math.max(worst, link.capacity);
 		}
 		return worst;

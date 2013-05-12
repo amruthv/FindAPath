@@ -13,8 +13,8 @@ import Metrics.LinkMetric;
 public class Graph {
 	
 	public List<Node> nodes;
-	public Map<Integer, Map<Integer,Integer>> nextNodeInPath;
-	public Map<Integer, Map<Integer,List<Integer>>> shortestPaths;
+	public Map<Integer, Map<Integer, Integer>> nextNodeInPath;
+	public Map<Integer, Map<Integer, List<Integer>>> shortestPaths;
 	double[][] dist;
 	Double[][] next;
 	int numNodes;

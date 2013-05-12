@@ -111,8 +111,10 @@ public class GraphGenerator {
 	}
 	
 	public static void connect(Node n1, Node n2) {
-		n1.addLink(n2);
-		n2.addLink(n1);
+		Link link1 = new Link(n1, n2);
+		Link link2 = new Link(n2, n1);
+		n1.addLinks(link1, link2);
+		n2.addLinks(link2, link1);
 	}
 	
 	public static double[] getAlphas(int n, double p) {

@@ -43,6 +43,6 @@ public class Link {
 	
 	public void flushPackets(){
 		this.packets=new HashSet<Packet>();
-		capacity=0;
+		capacity = 0;
 	}
 }

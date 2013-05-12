@@ -1,6 +1,5 @@
 package network;
 
-import Metrics.LinkMetric;
 
 
 public class DistanceVector extends RoutingProtocol {
@@ -14,7 +13,9 @@ public class DistanceVector extends RoutingProtocol {
 	
 	@Override
 	public void route(Node sender, Packet p) {
-		int nextNodeID=(g.nextNodeInPath.get(sender.id)).get(p.destination);
+		if (sender.id == p.destination)
+			return;
+		int nextNodeID = (g.nextNodeInPath.get(sender.id)).get(p.destination);
 		sender.getOutLinkToNode(nextNodeID).addPacket(p);
 	}
 	

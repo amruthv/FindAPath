@@ -8,10 +8,10 @@ public class TrafficAssigner {
 		Random r = new Random();
 		int count = 0;
 		while (count < numPackets) {
-			Node from = graph.nodes.get(r.nextInt(graph.numNodes));
+			int from = r.nextInt(graph.numNodes);
 			int to = r.nextInt(graph.numNodes);
-			if (graph.dist[from.id][to] < Integer.MAX_VALUE) {
-				from.addTraffic(to);
+			if (from != to && graph.dist[from][to] < Integer.MAX_VALUE) {
+				graph.nodes.get(from).addTraffic(to);
 				count++;
 			}
 		}
