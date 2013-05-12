@@ -13,21 +13,15 @@ public class Node {
 	public final Set<Link> inLinks;
 	public final Set<Link> outLinks;
 	public final List<Packet> sourcePackets;
-	private int id;
+	public final Set<Packet> queue;
+	public int id;
     
     public Node(double x, double y) {
     	loc = new Point(x, y);
         inLinks = new HashSet<Link>();
         outLinks = new HashSet<Link>();
-        this.sourcePackets = new ArrayList<Packet>();
-    }
-    
-    public void setId(int id) {
-    	this.id = id;
-    }
-    
-    public int getId() {
-    	return id;
+        sourcePackets = new ArrayList<Packet>();
+        queue = new HashSet<Packet>();
     }
     
     public void addLink(Node other) {
@@ -35,7 +29,7 @@ public class Node {
     	outLinks.add(new Link(this, other));
     }
     
-    public void addPacket(Packet p) {
+    public void addSourcePacket(Packet p) {
     	sourcePackets.add(p);
     }
     
@@ -43,9 +37,9 @@ public class Node {
     	return loc.distance(other.loc);
     }
     
-    public Link getOutLinkToNode(int nextNodeID){
+    public Link getOutLinkToNode(int nextNodeID) {
     	for (Link l : this.outLinks){
-    		if (l.toNode.getId()==nextNodeID){
+    		if (l.toNode.id == nextNodeID){
     			return l;
     		}
     	}
@@ -53,8 +47,8 @@ public class Node {
     	return null;
     }
     
-    public boolean equals(Node node){
-    	return this == node || this.id == node.id;
+    public boolean equals(Node node) {
+    	return this.id == node.id;
     }
     
 }

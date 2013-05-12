@@ -10,7 +10,7 @@ public class PacketAssigner {
 			Node from = graph.nodes.get(r.nextInt(graph.numNodes));
 			Node to = graph.nodes.get(r.nextInt(graph.numNodes));
 			Packet newPacket = new Packet(from, to, i);
-			from.addPacket(newPacket);
+			from.addSourcePacket(newPacket);
 		}
 	}	
 }

@@ -22,7 +22,7 @@ public class Graph {
 		this.next = new Double[numNodes][numNodes];
 		
 		for (int i = 0; i < nodes.size(); i++)
-			nodes.get(i).setId(i);
+			nodes.get(i).id = i;
 	}
 	
 	
@@ -49,7 +49,7 @@ public class Graph {
 		for (Node node: this.nodes){
 			Set<Link> outedges= node.outLinks;
 			for (Link outlink: outedges){
-				dist[outlink.fromNode.getId()][outlink.toNode.getId()]=outlink.cost;
+				dist[outlink.fromNode.id][outlink.toNode.id]=outlink.cost;
 			}
 		}
 		//Compute shortest distances
@@ -119,7 +119,7 @@ public class Graph {
 		SimpleMatrix a = new SimpleMatrix(nodes.size(), nodes.size());
 		for (Node n : nodes)
 			for (Link l : n.outLinks)
-				a.set(n.getId(), l.toNode.getId(), 1);
+				a.set(n.id, l.toNode.id, 1);
 		
 		return a;
 	}
