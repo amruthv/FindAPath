@@ -8,6 +8,8 @@ import java.util.Set;
 
 import org.ejml.simple.SimpleMatrix;
 
+import Metrics.LinkMetric;
+
 public class Graph {
 	
 	public List<Node> nodes;
@@ -30,7 +32,7 @@ public class Graph {
 	}
 	
 	
-	public void calcShortestPaths(){		
+	public void calcShortestPaths(LinkMetric lm){		
 		//Initialize all distances to infinity
 		for (int i=0; i<numNodes;i++){
 			for (int j=0;j<numNodes;j++){
@@ -53,7 +55,7 @@ public class Graph {
 		for (Node node: this.nodes){
 			Set<Link> outedges= node.outLinks;
 			for (Link outlink: outedges){
-				dist[outlink.fromNode.id][outlink.toNode.id]=outlink.cost;
+				dist[outlink.fromNode.id][outlink.toNode.id]=lm.getCost(outlink);
 			}
 		}
 		//Compute shortest distances
@@ -211,6 +213,13 @@ public class Graph {
 		
 		return result;
 	}
+
+	public double[] pageRank() {
+		  double alpha = 0.04;
+		  SimpleMatrix a = getAdjacencyMatrix();
+		  return null;
+		  //double
+	}
 	
 	public double[] calcEigenvectorCentrality() {
 		return null;
@@ -227,13 +236,6 @@ public class Graph {
 				a.set(n.id, l.toNode.id, 1);
 		
 		return a;
-	}
-
-	public double[] pageRank() {
-		  double alpha = 0.04;
-		  SimpleMatrix a = getAdjacencyMatrix();
-		  return null;
-		  //double
 	}
 	
 }
