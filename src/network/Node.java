@@ -1,8 +1,8 @@
 package network;
 
-import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
-import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import utils.Point;
@@ -12,16 +12,14 @@ public class Node {
     public final Point loc;
 	public final Set<Link> inLinks;
 	public final Set<Link> outLinks;
-	public final List<Packet> sourcePackets;
-	public final Set<Packet> queue;
+	public final Map<Integer, Integer> selfTraffic;
 	public int id;
     
     public Node(double x, double y) {
     	loc = new Point(x, y);
         inLinks = new HashSet<Link>();
         outLinks = new HashSet<Link>();
-        sourcePackets = new ArrayList<Packet>();
-        queue = new HashSet<Packet>();
+        selfTraffic = new HashMap<Integer, Integer>();
     }
     
     public void addLink(Node other) {
@@ -29,8 +27,8 @@ public class Node {
     	outLinks.add(new Link(this, other));
     }
     
-    public void addSourcePacket(Packet p) {
-    	sourcePackets.add(p);
+    public void addTraffic(int dest) {
+    	selfTraffic.put(dest, selfTraffic.get(dest) + 1);
     }
     
     public double getDistance(Node other) {
