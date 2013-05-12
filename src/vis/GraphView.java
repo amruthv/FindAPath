@@ -8,6 +8,7 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.RenderingHints;
 import java.awt.Shape;
+import java.awt.Stroke;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
@@ -220,12 +221,7 @@ public class GraphView extends JFrame {
 			t.scale(xscale, yscale);
 			g.setTransform(t);
 
-			// set the stroke so that when it zooms in all the lines still look
-			// thin.
-			g.setStroke(new BasicStroke(
-					(float) (1.0f * (x_max - x_min) / (FRAME_WIDTH * total_mag))));
-
-			// TODO erase stuff here I suppose?
+			g.setStroke(new BasicStroke(1.0f));
 
 			// draw the grid
 			drawGrid(g);
@@ -237,21 +233,36 @@ public class GraphView extends JFrame {
 		}
 
 		private void paintLinks(Graphics2D g) {
-			for (Node n : graph.nodes)
-				for (Link l : n.outLinks)
+			Stroke s = g.getStroke();
+			
+			for (Node n : graph.nodes) {
+				for (Link l : n.outLinks) {
+					g.setStroke(new BasicStroke((float)(1.0f)));
 					paintLink(g, l, Color.blue);
+				}
+			}
+			
+			g.setStroke(s);
 		}
 
 		private void paintNodes(Graphics2D g) {
 			//double[] cent = graph.calcDegreeCentrality();
 			double[] cent = graph.calcKatzCentrality();
+
 			double max = Utils.getMax(cent);
-			Node n;
+			double min = Utils.getMin(cent);
 			
+			Node n;
+		
 			for (int i = 0 ; i < graph.nodes.size(); i++) {
 				n = graph.nodes.get(i);
-				paintPoint(g, n.loc, Color.red, cent[i]/max);
+				paintPoint(g, n.loc, getColoring(cent[i], .65, min, max), 10);
 			}
+		}
+		
+		public Color getColoring(double value, double range, double min, double max) {
+			double h = range-((value-min)/(max-min)*range);
+			return Color.getHSBColor((float)h, (float)1.0, (float)1.0);
 		}
 
 		// draw edge
@@ -261,9 +272,7 @@ public class GraphView extends JFrame {
 		}
 
 		// draws a poing on the graph in a particular color
-		private void paintPoint(Graphics2D g, Point p, Color c, double scale) {
-			double size = 15;
-			size *= scale;
+		private void paintPoint(Graphics2D g, Point p, Color c, double size) {
 			g.setColor(c);
 			g.fill(new Ellipse2D.Double(p.x-size/2, p.y-size/2, size, size));
 			g.setColor(Color.blue);
