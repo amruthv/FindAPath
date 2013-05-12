@@ -1,11 +1,15 @@
 package network;
 
+import Metrics.LinkMetric;
 
 
 public class DistanceVector extends RoutingProtocol {
 	Graph g;
 	public DistanceVector(Graph g){
 		this.g=g;
+		g.calcShortestPaths(LinkMetric.simpleCost);
+		g.computeAllNextInPath();
+		
 	}
 	
 	@Override
@@ -33,6 +37,6 @@ public class DistanceVector extends RoutingProtocol {
 				}
 			}
 			inlink.flushPackets();*/
-		}
+		
 	}
 }

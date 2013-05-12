@@ -8,6 +8,8 @@ import java.util.Set;
 
 import org.ejml.simple.SimpleMatrix;
 
+import Metrics.LinkMetric;
+
 public class Graph {
 	
 	public List<Node> nodes;
@@ -30,7 +32,7 @@ public class Graph {
 	}
 	
 	
-	public void calcShortestPaths(){		
+	public void calcShortestPaths(LinkMetric lm){		
 		//Initialize all distances to infinity
 		for (int i=0; i<numNodes;i++){
 			for (int j=0;j<numNodes;j++){
@@ -53,7 +55,7 @@ public class Graph {
 		for (Node node: this.nodes){
 			Set<Link> outedges= node.outLinks;
 			for (Link outlink: outedges){
-				dist[outlink.fromNode.id][outlink.toNode.id]=outlink.cost;
+				dist[outlink.fromNode.id][outlink.toNode.id]=lm.getCost(outlink);
 			}
 		}
 		//Compute shortest distances
@@ -181,8 +183,42 @@ public class Graph {
 		return 0;
 	}
 	
+	public double[] calcDegreeCentrality() {
+		double[] result = new double[nodes.size()];
+		for (int i = 0; i<nodes.size(); i++)
+			result[i] = nodes.get(i).inLinks.size()/(double)nodes.size();;
+		return result;
+	}
+	
 	public double[] calcBetweenessCentrality() {
 		return null;
+	}
+	
+	public double[] calcKatzCentrality() {
+		int n = nodes.size();
+		
+		double alpha = .04;
+		SimpleMatrix a = getAdjacencyMatrix();
+		SimpleMatrix v = new SimpleMatrix(new double[n][1]);
+		for (int i = 0; i<n; i++)
+			v.set(i, 0, 1);
+		
+		SimpleMatrix katz = SimpleMatrix.identity(n);
+		katz = katz.minus(a.scale(alpha).transpose()).invert().mult(v);
+		
+		
+		double[] result = new double[n];
+		for (int i = 0; i < n; i++)
+			result[i] = katz.get(i,0);
+		
+		return result;
+	}
+
+	public double[] pageRank() {
+		  double alpha = 0.04;
+		  SimpleMatrix a = getAdjacencyMatrix();
+		  return null;
+		  //double
 	}
 	
 	public double[] calcEigenvectorCentrality() {
@@ -200,13 +236,6 @@ public class Graph {
 				a.set(n.id, l.toNode.id, 1);
 		
 		return a;
-	}
-
-	public double[] pageRank() {
-		  double alpha = 0.04;
-		  SimpleMatrix a = getAdjacencyMatrix();
-		  return null;
-		  //double
 	}
 	
 }

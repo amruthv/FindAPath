@@ -6,21 +6,22 @@ import Metrics.WorstLink;
 
 public class Main {
     public static void main(String[] args) {
-    	runSolution();
+    	//runSolution();
+    	seeGraphs();
     }
     
     public static void seeGraphs() {
-        Graph g = GraphGenerator.generateCloseConnectGraph(1000, .06, new double[][] {{-500,500},{-500,500}});
+        Graph g = GraphGenerator.generateCloseConnectGraph(500, .08, new double[][] {{-250,250},{-250,250}});
         new GraphView(g);
         
-        g = GraphGenerator.generateCloseProbGraph(500, .001, 0, new double[][] {{-500,500},{-500,500}});
-        new GraphView(g);
+        //g = GraphGenerator.generateCloseProbGraph(500, .001, 0, new double[][] {{-500,500},{-500,500}});
+        //new GraphView(g);
         
-        g = GraphGenerator.generateHierachGraph(500, .6, .05, new double[][] {{-500,500},{-500,500}});
-        new GraphView(g);
+        //g = GraphGenerator.generateHierachGraph(500, .6, .05, new double[][] {{-500,500},{-500,500}});
+        //new GraphView(g);
     }
     
-    public static Graph GRAPH = GraphGenerator.generateCloseConnectGraph(500, .05, new double[][]{{-500, 500}, {-500, 500}});
+    public static Graph GRAPH = GraphGenerator.generateCloseConnectGraph(10, .05, new double[][]{{-500, 500}, {-500, 500}});
     public static RoutingProtocol PROTOCOL = new DistanceVector(GRAPH);
     public static Router ROUTER = new Router(GRAPH);
     public static Metric[] METRICS = new Metric[]{new WorstLink()};
