@@ -9,7 +9,6 @@ public class DistanceVector extends RoutingProtocol {
 		this.g=g;
 		g.calcShortestPaths(LinkMetric.simpleCost);
 		g.computeAllNextInPath();
-		
 	}
 	
 	@Override
