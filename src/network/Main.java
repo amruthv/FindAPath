@@ -8,7 +8,7 @@ public class Main {
         new GraphView(g);
         
         g = GraphGenerator.generateCloseProbGraph(500, .001, 0, new double[][] {{-500,500},{-500,500}});
-        //new GraphView(g);
+        new GraphView(g);
         
         g = GraphGenerator.generateHierachGraph(500, .1, .5, new double[][] {{-500,500},{-500,500}});
         //new GraphView(g);
