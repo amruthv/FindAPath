@@ -80,6 +80,9 @@ public class Graph {
 		for (int i=0;i<numNodes;i++){
 			for (int j=0;j<numNodes;j++){
 				int nextStep = getNextInPath(i,j);
+				if (!nextNodeInPath.containsKey(i)){
+					nextNodeInPath.put(i, new HashMap<Integer,Integer>());
+				}
 				nextNodeInPath.get(i).put(j,nextStep);
 			}
 		}
@@ -117,9 +120,10 @@ public class Graph {
 	public void computeAllWholePaths(){
 		for (int i=0;i<numNodes;i++){
 			for (int j=0;j<numNodes;j++){
-				if (!hasPath(i,j)){
-					shortestPaths.get(i).put(j,getWholePath(i,j));
+				if (!shortestPaths.containsKey(i)){
+					shortestPaths.put(i, new HashMap<Integer,List<Integer>>());
 				}
+				shortestPaths.get(i).put(j,getWholePath(i,j));
 			}
 		}
 	}
@@ -134,9 +138,7 @@ public class Graph {
 		List<Integer> paths= new ArrayList<Integer>();
 		paths.add(i);
 		if (i==j){
-			if (!hasPath(i,j)){
-				return paths;
-			}
+			return paths;
 		}
 		//not reachable
 		if (dist[i][j]==Integer.MAX_VALUE){
@@ -153,30 +155,11 @@ public class Graph {
 			}
 			else{
 				List<Integer> firstPart= getWholePath(i,interVal);
-				if (!hasPath(i,interVal)){
-					firstPart.add(interVal);
-					shortestPaths.get(i).put(interVal, firstPart);
-					//pop off intermediate val
-					firstPart.remove(firstPart.size()-1);
-				}
-				List<Integer> secondPart = getWholePath((int) intermediate.doubleValue(),j);
-				if(!hasPath(interVal,j)){
-					secondPart.add(j);
-					shortestPaths.get(i).put(interVal, secondPart);
-					//pop off intermediate val
-					secondPart.remove(firstPart.size()-1);
-				}
+				List<Integer> secondPart = getWholePath(interVal,j);
 				firstPart.addAll(secondPart);
 				return firstPart;
 			}
 		}
-	}
-	
-	public boolean hasPath(int i, int j){
-		if (shortestPaths.containsKey(i) && (shortestPaths.get(i)).containsKey(j)){
-			return true;
-		}
-		return false;
 	}
 
 	public int calcDiameter() {
