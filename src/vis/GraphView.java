@@ -234,11 +234,34 @@ public class GraphView extends JFrame {
 
 		private void paintLinks(Graphics2D g) {
 			Stroke s = g.getStroke();
-			
+			System.out.println("cycle");
+			Link in, out;
 			for (Node n : graph.nodes) {
-				for (Link l : n.outLinks) {
-					g.setStroke(new BasicStroke((float)(1.0f)));
-					paintLink(g, l, Color.blue);
+				for (int i = 0; i < n.inLinks.size(); i++) {
+					in = n.inLinks.get(i);
+					out = n.outLinks.get(i);
+					
+
+					if (out.toNode.id < n.id)
+						continue;
+					
+					
+					g.setStroke(new BasicStroke((float)(2)));
+					paintLink(g, out, Color.blue);
+					//g.setStroke(new BasicStroke((float)(5*Math.random()*Math.random())));
+					//g.setStroke(new BasicStroke(1f));
+					//paintLink(g, l, Color.white);
+					//continue;
+					
+					
+					
+					
+					double width = (out.length()/1*Math.random());
+					BasicStroke stroke = new BasicStroke(4.0f, BasicStroke.CAP_BUTT, BasicStroke.JOIN_MITER,
+					        10.0f, new float[]{4.0f, (float)(width)}, 0.0f);
+					g.setStroke(stroke);
+					
+					paintLink(g, out, Color.red);
 				}
 			}
 			

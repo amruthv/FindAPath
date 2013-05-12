@@ -6,7 +6,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.PriorityQueue;
-import java.util.Set;
 
 import org.ejml.simple.SimpleMatrix;
 
@@ -62,7 +61,7 @@ public class Graph {
 		}
 		//Initialize all edges in matrix
 		for (Node node: this.nodes){
-			Set<Link> outedges= node.outLinks;
+			List<Link> outedges= node.outLinks;
 			for (Link outlink: outedges){
 				dist[outlink.fromNode.id][outlink.toNode.id]=lm.getCost(outlink);
 			}

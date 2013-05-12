@@ -45,4 +45,8 @@ public class Link {
 		this.packets=new HashSet<Packet>();
 		capacity = 0;
 	}
+	
+	public double length() {
+		return fromNode.distance(toNode);
+	}
 }
