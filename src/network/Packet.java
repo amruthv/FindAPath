@@ -2,14 +2,12 @@ package network;
 
 public class Packet {
 
-	public final Node source;
-	public final Node destination;
-	public final int id;
+	public final int source;
+	public final int destination;
 	
-	public Packet(Node source, Node destination, int id) {
+	public Packet(int source, int destination) {
 		this.source = source;
 		this.destination = destination;
-		this.id = id;
 	}
 	
 }

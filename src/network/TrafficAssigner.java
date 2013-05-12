@@ -2,7 +2,7 @@ package network;
 
 import java.util.Random;
 
-public class PacketAssigner {
+public class TrafficAssigner {
 
 	public static void assignPackets(Graph graph, int p) {
 		Random r = new Random();
