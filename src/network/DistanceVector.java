@@ -16,7 +16,7 @@ public class DistanceVector extends RoutingProtocol {
 			for (Packet p: inlink.packets) {
 				int destID=p.destination.id;
 				if (destID!=currID){
-					int nextNodeID=(g.shortestPaths.get(currID)).get(destID);
+					int nextNodeID=(g.nextNodeInPath.get(currID)).get(destID);
 					Link linkToUse= sender.getOutLinkToNode(nextNodeID);
 					linkToUse.addPacket(p);
 				}

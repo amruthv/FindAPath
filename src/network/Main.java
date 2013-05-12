@@ -28,10 +28,6 @@ public class Main {
     public static void runSolution() {
     	ROUTER.routeAllNodes(20000, PROTOCOL);
     	for (Metric m : METRICS) 
-    		System.out.println(m.score(GRAPH));
-    	
-    	
-    	
-    	
+    		System.out.println(m.score(GRAPH));    	
     }
 }

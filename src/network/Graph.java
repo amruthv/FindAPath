@@ -1,5 +1,7 @@
 package network;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -9,14 +11,16 @@ import org.ejml.simple.SimpleMatrix;
 public class Graph {
 	
 	public List<Node> nodes;
-	public Map<Integer, Map<Integer,Integer>> shortestPaths;
+	public Map<Integer, Map<Integer,Integer>> nextNodeInPath;
+	public Map<Integer, Map<Integer,List<Integer>>> shortestPaths;
 	double[][] dist;
 	Double[][] next;
 	int numNodes;
 	
 	public Graph(List<Node> nodes) {
 		this.nodes = nodes;
-		this.shortestPaths=null;
+		this.nextNodeInPath=new HashMap<Integer, Map<Integer,Integer>>();
+		this.shortestPaths= new HashMap<Integer, Map<Integer,List<Integer>>>();
 		this.numNodes=this.nodes.size();
 		this.dist = new double[numNodes][numNodes];
 		this.next = new Double[numNodes][numNodes];
@@ -34,7 +38,7 @@ public class Graph {
 			}
 		}
 		
-		//Initialize all distances to infinity
+		//Initialize all next node to null
 		for (int i=0; i<numNodes;i++){
 			for (int j=0;j<numNodes;j++){
 				next[i][j]=null;
@@ -74,10 +78,11 @@ public class Graph {
 		for (int i=0;i<numNodes;i++){
 			for (int j=0;j<numNodes;j++){
 				int nextStep = getNextInPath(i,j);
-				shortestPaths.get(i).put(j,nextStep);
+				nextNodeInPath.get(i).put(j,nextStep);
 			}
 		}
 	}
+	
 	/**
 	 * Get id of next node in path from i to j
 	 * @param i source
@@ -85,6 +90,9 @@ public class Graph {
 	 * @return id of next node after i in path
 	 */
 	public int getNextInPath(int i, int j){
+		if (i==j){
+			return i;
+		}
 		if (dist[i][j]==Integer.MAX_VALUE){
 			return -Integer.MAX_VALUE;
 		}
@@ -97,6 +105,76 @@ public class Graph {
 				return getNextInPath(i,(int) intermediate.doubleValue());
 			}
 		}
+	}
+	
+	
+	
+	/**
+	 * Computes and stores the next node for all source-destination paths
+	 */
+	public void computeAllWholePaths(){
+		for (int i=0;i<numNodes;i++){
+			for (int j=0;j<numNodes;j++){
+				if (!hasPath(i,j)){
+					shortestPaths.get(i).put(j,getWholePath(i,j));
+				}
+			}
+		}
+	}
+	
+	/**
+	 * Get id of next node in path from i to j
+	 * @param i source
+	 * @param j destination
+	 * @return list of node id's in order to get from i to j
+	 */
+	public List<Integer> getWholePath(int i, int j){
+		List<Integer> paths= new ArrayList<Integer>();
+		paths.add(i);
+		if (i==j){
+			if (!hasPath(i,j)){
+				return paths;
+			}
+		}
+		//not reachable
+		if (dist[i][j]==Integer.MAX_VALUE){
+			return null;
+		}
+		//reachable
+		else{
+			Double intermediate=next[i][j];
+			int interVal = (int) intermediate.doubleValue();
+			//no intermediate node. Edge between them is shortest path
+			if (intermediate == null){
+				paths.add(j);
+				return paths;
+			}
+			else{
+				List<Integer> firstPart= getWholePath(i,interVal);
+				if (!hasPath(i,interVal)){
+					firstPart.add(interVal);
+					shortestPaths.get(i).put(interVal, firstPart);
+					//pop off intermediate val
+					firstPart.remove(firstPart.size()-1);
+				}
+				List<Integer> secondPart = getWholePath((int) intermediate.doubleValue(),j);
+				if(!hasPath(interVal,j)){
+					secondPart.add(j);
+					shortestPaths.get(i).put(interVal, secondPart);
+					//pop off intermediate val
+					secondPart.remove(firstPart.size()-1);
+				}
+				firstPart.addAll(secondPart);
+				return firstPart;
+			}
+		}
+	}
+	
+	public boolean hasPath(int i, int j){
+		if (shortestPaths.containsKey(i) && (shortestPaths.get(i)).containsKey(j)){
+			return true;
+		}
+		return false;
 	}
 
 	public int calcDiameter() {
