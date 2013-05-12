@@ -21,7 +21,7 @@ public class Main {
         //new GraphView(g);
     }
     
-    public static Graph GRAPH = GraphGenerator.generateCloseConnectGraph(500, .05, new double[][]{{-500, 500}, {-500, 500}});
+    public static Graph GRAPH = GraphGenerator.generateCloseConnectGraph(10, .05, new double[][]{{-500, 500}, {-500, 500}});
     public static RoutingProtocol PROTOCOL = new DistanceVector(GRAPH);
     public static Router ROUTER = new Router(GRAPH);
     public static Metric[] METRICS = new Metric[]{new WorstLink()};

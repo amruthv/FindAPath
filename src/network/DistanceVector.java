@@ -7,6 +7,9 @@ public class DistanceVector extends RoutingProtocol {
 	Graph g;
 	public DistanceVector(Graph g){
 		this.g=g;
+		g.calcShortestPaths();
+		g.computeAllNextInPath();
+		
 	}
 	public void Route(Node sender){
 		int currID = sender.id;
