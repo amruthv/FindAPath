@@ -4,10 +4,11 @@ import Metrics.LinkMetric;
 
 
 public class DistanceVector extends RoutingProtocol {
-	Graph g;
+	
+	public Graph g;
+	
 	public DistanceVector(Graph g){
 		this.g=g;
-		g.calcShortestPaths(LinkMetric.simpleCost);
 		g.computeAllNextInPath();
 	}
 	

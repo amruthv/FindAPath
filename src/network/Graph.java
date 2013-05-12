@@ -29,6 +29,8 @@ public class Graph {
 		
 		for (int i = 0; i < nodes.size(); i++)
 			nodes.get(i).id = i;
+		
+		calcShortestPaths(LinkMetric.simpleCost);
 	}
 	
 	

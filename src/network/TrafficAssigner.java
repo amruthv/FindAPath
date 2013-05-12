@@ -6,10 +6,14 @@ public class TrafficAssigner {
 
 	public static void assignPackets(Graph graph, int numPackets) {
 		Random r = new Random();
-		for (int i = 0; i < numPackets; i++) {
+		int count = 0;
+		while (count < numPackets) {
 			Node from = graph.nodes.get(r.nextInt(graph.numNodes));
 			int to = r.nextInt(graph.numNodes);
-			from.addTraffic(to);
+			if (graph.dist[from.id][to] < Integer.MAX_VALUE) {
+				from.addTraffic(to);
+				count++;
+			}
 		}
 	}	
 }
