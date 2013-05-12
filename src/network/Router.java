@@ -28,10 +28,9 @@ public class Router {
 	}
 	
 	public void routeAllNodes(int numTimes, RoutingProtocol protocol){
-		for (int i=0;i<numTimes;i++) {
-			for(Node sender:graph.nodes) {
-				List<Packet> packets = getPacketsAtNode(sender);
-				for (Packet p : packets)
+		for (int i = 0; i < numTimes; i++) {
+			for (Node sender : graph.nodes) {
+				for (Packet p : getPacketsAtNode(sender))
 					protocol.route(sender, p);
 			}
 		}

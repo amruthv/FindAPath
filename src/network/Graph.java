@@ -32,7 +32,8 @@ public class Graph {
 	}
 	
 	
-	public void calcShortestPaths(LinkMetric lm){		
+	public void calcShortestPaths(LinkMetric lm) {
+		
 		//Initialize all distances to infinity
 		for (int i=0; i<numNodes;i++){
 			for (int j=0;j<numNodes;j++){
