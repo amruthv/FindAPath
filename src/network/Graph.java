@@ -4,10 +4,12 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.PriorityQueue;
 import java.util.Set;
 
 import org.ejml.simple.SimpleMatrix;
 
+import utils.NodeIDDistPair;
 import Metrics.LinkMetric;
 
 public class Graph {
@@ -18,23 +20,27 @@ public class Graph {
 	double[][] dist;
 	Double[][] next;
 	int numNodes;
+	public LinkMetric lm;
+	int[][] adjacency;
 	
-	public Graph(List<Node> nodes) {
+	public Graph(List<Node> nodes, LinkMetric lm) {
 		this.nodes = nodes;
 		this.nextNodeInPath=new HashMap<Integer, Map<Integer,Integer>>();
 		this.shortestPaths= new HashMap<Integer, Map<Integer,List<Integer>>>();
 		this.numNodes=this.nodes.size();
 		this.dist = new double[numNodes][numNodes];
 		this.next = new Double[numNodes][numNodes];
+		this.lm=lm;
+		this.adjacency= new int[numNodes][numNodes];
 		
 		for (int i = 0; i < nodes.size(); i++)
 			nodes.get(i).id = i;
+		calcShortestPaths();
 		
-		calcShortestPaths(LinkMetric.cost);
 	}
 	
 	
-	public void calcShortestPaths(LinkMetric lm) {
+	public void calcShortestPaths() {
 		
 		//Initialize all distances to infinity
 		for (int i=0; i<numNodes;i++){
@@ -163,6 +169,60 @@ public class Graph {
 				return firstPart;
 			}
 		}
+	}
+	
+	public void sssp(Node source){
+		int sID=source.id;
+		System.out.println(nextNodeInPath.get(sID).toString());
+		//Create hashmap for nextNodeInPath if necessary
+		if(!nextNodeInPath.containsKey(sID)){
+			nextNodeInPath.put(sID, new HashMap<Integer,Integer>());
+		}
+		List<NodeIDDistPair> pairs = new ArrayList<NodeIDDistPair>();
+		PriorityQueue<NodeIDDistPair> distances= new PriorityQueue<NodeIDDistPair>();
+		for (int i=0;i<numNodes;i++){
+			//Create a node infinity far away
+			pairs.add(new NodeIDDistPair(i,Integer.MAX_VALUE));
+			//Clear all next node in paths
+			nextNodeInPath.get(sID).put(i, null);
+		}
+		distances.addAll(pairs);
+		System.out.println("distances size: "+distances.size());
+		//Initialize distances and self for base step of dijkstra
+		pairs.get(sID).dist=0;
+		nextNodeInPath.get(sID).put(sID, sID);
+		while (distances.size()!=0){
+			NodeIDDistPair min = distances.poll();
+			dist[sID][min.id]=min.dist;
+			if (min.dist==Integer.MAX_VALUE){
+				break;
+			}
+			for (Link l:nodes.get(min.id).outLinks){
+				int neighborID = l.toNode.id;
+				double neighborCost=pairs.get(neighborID).dist;
+				double newPathCost =  min.dist + lm.getCost(l);
+				if (neighborCost > newPathCost){
+					System.out.println("neighbor Ids: "+ neighborID);
+					System.out.println("neighbor cost was more: " + neighborCost + " newPathCost: "+newPathCost);
+					pairs.get(neighborID).dist=newPathCost;
+					//Set the next node to forward to be the next node in the shortest path through u
+					int stepToU = nextNodeInPath.get(sID).get(min.id);
+					//More than 1 step away
+					if (stepToU != sID){
+						nextNodeInPath.get(sID).put(neighborID, stepToU);
+					}
+					//Just one step away
+					else{
+						nextNodeInPath.get(sID).put(neighborID, neighborID);
+					}
+				}
+			}
+		}
+		System.out.println(distances.toString());
+		System.out.println(nextNodeInPath.get(sID).toString());
+		
+
+		
 	}
 
 	public int calcDiameter() {

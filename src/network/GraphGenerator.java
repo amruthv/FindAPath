@@ -3,15 +3,17 @@ package network;
 import java.util.ArrayList;
 import java.util.List;
 
+import Metrics.LinkMetric;
+
 public class GraphGenerator {
 
 	// range is [[xLow, xHigh], [yLow, yHigh]]
 
 	// connects if distance < threshold
-	public static Graph generateCloseConnectGraph(int n, double threshold, double[][] range) {
+	public static Graph generateCloseConnectGraph(int n, double threshold, double[][] range, LinkMetric lm) {
 		List<Node> nodes = makeRandomPoints(n, range);
 		double size = .5 * (range[0][1] - range[0][0] + range[1][1] - range[1][0]);
-		System.out.println(size);
+		//System.out.println(size);
 		for (int i = 0; i < n; i++) {
 			for (int j = 0; j < n; j++) {
 				Node n1 = nodes.get(i);
@@ -20,11 +22,11 @@ public class GraphGenerator {
 					connect(n1, n2);
 			}
 		}
-		return new Graph(nodes);
+		return new Graph(nodes, lm);
 	}
 
 	// connects with prob = alpha * e ^ (-beta * distance)
-	public static Graph generateCloseProbGraph(int n, double alpha, double beta, double[][] range) {
+	public static Graph generateCloseProbGraph(int n, double alpha, double beta, double[][] range, LinkMetric lm) {
 		List<Node> nodes = makeRandomPoints(n, range);
 		double size = .5 * (range[0][1] - range[0][0] + range[1][1] - range[1][0]);
 		for (int i = 0; i < n; i++) {
@@ -35,12 +37,12 @@ public class GraphGenerator {
 					connect(n1, n2);
 			}
 		}
-		return new Graph(nodes);
+		return new Graph(nodes, lm);
 	}
 	
 	// nodes are given alpha_i distributed according power law with parameter p
 	// connect with prob = alpha * alpha[i] * alpha[j] * e ^ (-beta * distance)
-	public static Graph generatePrefGraph(int n, double alpha, double beta, double p, double[][] range) {
+	public static Graph generatePrefGraph(int n, double alpha, double beta, double p, double[][] range, LinkMetric lm) {
 		List<Node> nodes = makeRandomPoints(n, range);
 		double size = .5 * (range[0][1] - range[0][0] + range[1][1] - range[1][0]);
 		double[] alphas = getAlphas(n, p);
@@ -52,17 +54,17 @@ public class GraphGenerator {
 					connect(n1, n2);
 			}
 		}
-		return new Graph(nodes);
+		return new Graph(nodes, lm);
 	}
 	
-	public static Graph generateHierachGraph(int n, double alpha, double beta, double[][] range) {
+	public static Graph generateHierachGraph(int n, double alpha, double beta, double[][] range, LinkMetric lm, boolean dynamic) {
 		int m = (int) Math.sqrt(n);
 		double size = .5 * (range[0][1] - range[0][0] + range[1][1] - range[1][0]);
-		Graph layout = generateCloseProbGraph(m, alpha, beta, range);
+		Graph layout = generateCloseProbGraph(m, alpha, beta, range, lm);
 		
 		Graph[] subGraphs = new Graph[m];
 		for (int i = 0; i < m; i++)
-			subGraphs[i] = generateCloseProbGraph(m, alpha, beta, getRangeOfNode(layout.nodes.get(i), m, size));
+			subGraphs[i] = generateCloseProbGraph(m, alpha, beta, getRangeOfNode(layout.nodes.get(i), m, size), lm);
 		Node[][] connectionPoints = getConnectionPoints(subGraphs);
 		
 		for (int i = 0; i < m; i++) {
@@ -77,7 +79,7 @@ public class GraphGenerator {
 		List<Node> finalNodes = new ArrayList<Node>();
 		for (Graph g : subGraphs)
 			finalNodes.addAll(g.nodes);
-		return new Graph(finalNodes);
+		return new Graph(finalNodes, lm);
 	}
 	
 	public static double[][] getRangeOfNode(Node node, int m, double size) {
