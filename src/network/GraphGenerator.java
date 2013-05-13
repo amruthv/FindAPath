@@ -18,7 +18,7 @@ public class GraphGenerator {
 			for (int j = 0; j < i; j++) {
 				Node n1 = nodes.get(i);
 				Node n2 = nodes.get(j);
-				if (n1.getDistance(n2) / size <= threshold)
+				if (n1.distance(n2) / size <= threshold)
 					connect(n1, n2);
 			}
 		}
@@ -33,7 +33,7 @@ public class GraphGenerator {
 			for (int j = 0; j < i; j++) {
 				Node n1 = nodes.get(i);
 				Node n2 = nodes.get(j);
-				if (Math.random() < alpha * Math.pow(Math.E, -beta * n1.getDistance(n2) / size))
+				if (Math.random() < alpha * Math.pow(Math.E, -beta * n1.distance(n2) / size))
 					connect(n1, n2);
 			}
 		}
@@ -50,7 +50,7 @@ public class GraphGenerator {
 			for (int j = 0; j < i; j++) {
 				Node n1 = nodes.get(i);
 				Node n2 = nodes.get(j);
-				if (Math.random() < alpha * alphas[i] * alphas[j] * Math.pow(Math.E, -beta * n1.getDistance(n2) / size))
+				if (Math.random() < alpha * alphas[i] * alphas[j] * Math.pow(Math.E, -beta * n1.distance(n2) / size))
 					connect(n1, n2);
 			}
 		}
@@ -113,6 +113,9 @@ public class GraphGenerator {
 	}
 	
 	public static void connect(Node n1, Node n2) {
+		if (n1 == n2)
+			return;
+
 		Link link1 = new Link(n1, n2);
 		Link link2 = new Link(n2, n1);
 		n1.addLinks(link1, link2);
