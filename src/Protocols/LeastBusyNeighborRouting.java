@@ -21,29 +21,28 @@ public class LeastBusyNeighborRouting extends RoutingProtocol {
 	
 	@Override
 	public void route(Node sender, List<Packet> packets) {
-		System.out.println(Arrays.deepToString(graph.dist));
-		for(int i=0; i<graph.numNodes;i++){
-//			System.out.println(graph.dist[i].toString());
-		}
 		for (Packet p : packets) {
-//			System.out.println("packet destination: "+p.destination);
+			if (p.destination == sender.id)
+				continue;
 			int nextNodeID = getLeastBusyNeighbor(sender, p.destination);
 			sender.getOutLinkToNode(nextNodeID).addPacket(p);
 		}
 	}
 	
 	public int getLeastBusyNeighbor(Node sender, int dest){
-		int maxBusy=-1;
-		int maxBusyID=-1;
-		for (Link l: sender.outLinks){
+		int minBusy = Integer.MAX_VALUE;
+		int minBusyID = -1;
+		for (Link l: sender.outLinks) {
 			Node neighbor = l.toNode;
-			if (neighbor.countInPackets()>maxBusy){
-				if(graph.dist[neighbor.id][dest] < graph.dist[sender.id][dest]){
-					maxBusy=neighbor.countInPackets();
-					maxBusyID=neighbor.id;
-				}
+			if (neighbor.id == dest)
+				return dest;
+			if (graph.dist[neighbor.id][dest] < graph.dist[sender.id][dest] && neighbor.countInPackets() < minBusy) {
+				minBusy = neighbor.countInPackets();
+				minBusyID = neighbor.id;
 			}
 		}
-		return maxBusyID;
+		if (minBusyID == -1)
+			throw new IllegalArgumentException("No closer node");
+		return minBusyID;
 	}
 }

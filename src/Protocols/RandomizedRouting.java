@@ -1,29 +1,40 @@
 package Protocols;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 import network.Graph;
+import network.Link;
 import network.Node;
 import network.Packet;
 import Metrics.LinkMetric;
 
-import Metrics.LinkMetric;
-
 public class RandomizedRouting extends RoutingProtocol {
 	public Graph graph;
-	public LinkMetric lm=LinkMetric.cost;
 	
-	public RandomizedRouting(Graph g){
-		this.graph=g;
+	public RandomizedRouting(Graph g) {
+		this.graph = g;
+		this.lm = LinkMetric.cost;
 	}
 	
 	@Override
 	public void route(Node sender, List<Packet> packets) {
 		for (Packet p : packets) {
 			if (sender.id == p.destination)
-				return;
-			int nextNodeID = (graph.nextNodeInPath.get(sender.id)).get(p.destination);
+				continue;
+			int nextNodeID = getRandomCloserNeighbor(sender, p.destination);
 			sender.getOutLinkToNode(nextNodeID).addPacket(p);
 		}
+	}
+	
+	public int getRandomCloserNeighbor(Node node, int dest) {
+		List<Integer> closerNeighbors = new ArrayList<Integer>();
+		for (Link l: node.outLinks) {
+			Node neighbor = l.toNode;
+			if (graph.dist[neighbor.id][dest] < graph.dist[node.id][dest])
+				closerNeighbors.add(neighbor.id);
+		}
+		return closerNeighbors.get((int) (closerNeighbors.size() * Math.random()));
 	}
 }

@@ -15,7 +15,7 @@ public class GraphGenerator {
 		double size = .5 * (range[0][1] - range[0][0] + range[1][1] - range[1][0]);
 		//System.out.println(size);
 		for (int i = 0; i < n; i++) {
-			for (int j = 0; j < n; j++) {
+			for (int j = 0; j < i; j++) {
 				Node n1 = nodes.get(i);
 				Node n2 = nodes.get(j);
 				if (n1.getDistance(n2) / size <= threshold)
@@ -30,7 +30,7 @@ public class GraphGenerator {
 		List<Node> nodes = makeRandomPoints(n, range);
 		double size = .5 * (range[0][1] - range[0][0] + range[1][1] - range[1][0]);
 		for (int i = 0; i < n; i++) {
-			for (int j = 0; j < n; j++) {
+			for (int j = 0; j < i; j++) {
 				Node n1 = nodes.get(i);
 				Node n2 = nodes.get(j);
 				if (Math.random() < alpha * Math.pow(Math.E, -beta * n1.getDistance(n2) / size))
@@ -47,7 +47,7 @@ public class GraphGenerator {
 		double size = .5 * (range[0][1] - range[0][0] + range[1][1] - range[1][0]);
 		double[] alphas = getAlphas(n, p);
 		for (int i = 0; i < n; i++) {
-			for (int j = 0; j < n; j++) {
+			for (int j = 0; j < i; j++) {
 				Node n1 = nodes.get(i);
 				Node n2 = nodes.get(j);
 				if (Math.random() < alpha * alphas[i] * alphas[j] * Math.pow(Math.E, -beta * n1.getDistance(n2) / size))
