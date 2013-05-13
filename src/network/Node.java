@@ -1,7 +1,9 @@
 package network;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -47,6 +49,32 @@ public class Node {
     	//No link to that node
     	return null;
     }
+    
+	public List<Packet> getInPackets() {
+		List<Packet> packets = new ArrayList<Packet>();
+		
+		for (int dest : selfTraffic.keySet()) {
+			for (int i = 0; i < selfTraffic.get(dest); i++)
+				packets.add(new Packet(id, dest));
+		}
+		
+		for (Link inLink : inLinks) {
+			for (Packet p: inLink.packets)
+				packets.add(p);
+			inLink.flushPackets();
+		}
+		
+		return packets;
+	}
+	
+	public int countInPackets() {
+		int count = 0;
+		for (int dest : selfTraffic.keySet())
+			count += selfTraffic.get(dest);
+		for (Link inLink : inLinks)
+			count += inLink.capacity;
+		return count;
+	}
     
     public boolean equals(Node node) {
     	return this.id == node.id;

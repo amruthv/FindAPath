@@ -23,7 +23,7 @@ public class Main {
         //new GraphView(g);
     }
     
-    public static Graph GRAPH = GraphGenerator.generateCloseConnectGraph(100, 1, new double[][]{{-500, 500}, {-500, 500}}, LinkMetric.congestion);
+    public static Graph GRAPH = GraphGenerator.generateCloseConnectGraph(100, .3, new double[][]{{-500, 500}, {-500, 500}}, LinkMetric.congestion);
     //public static RoutingProtocol PROTOCOL = new DistanceVector(GRAPH);
     public static RoutingProtocol PROTOCOL = new CongestionRouting(GRAPH);
     public static Router ROUTER = new Router(GRAPH);
@@ -31,7 +31,7 @@ public class Main {
     
     public static void runSolution(boolean dynamic) {
     	TrafficAssigner.assignPackets(GRAPH, 200);
-    	ROUTER.routeAllNodes(200, PROTOCOL,dynamic);
+    	ROUTER.routeAllNodes(200, PROTOCOL);
 
     	for (Metric m : METRICS) 
     		System.out.println(m.score(GRAPH));
