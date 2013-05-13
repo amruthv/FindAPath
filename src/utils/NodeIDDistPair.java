@@ -1,6 +1,8 @@
 package utils;
 
-public class NodeIDDistPair implements Comparable{
+import java.util.Comparator;
+
+public class NodeIDDistPair {
 	
 	public int id;
 	public double dist;
@@ -10,12 +12,12 @@ public class NodeIDDistPair implements Comparable{
 		this.dist=dist;
 	}
 
-	@Override
-	public int compareTo(Object o) {
-		if (this.dist < ((NodeIDDistPair) o).dist){
+	public int compareTo(NodeIDDistPair o) {
+//		System.out.println("in compareTo");
+		if (this.dist < o.dist){
 			return -1;
 		}
-		else if (this.dist==((NodeIDDistPair)o).dist){
+		else if (this.dist==o.dist){
 			return 0;
 		}
 		else{
