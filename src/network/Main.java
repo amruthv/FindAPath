@@ -4,7 +4,7 @@ import vis.GraphView;
 import Metrics.LinkMetric;
 import Metrics.Metric;
 import Metrics.WorstLink;
-import Protocols.CongestionRouting;
+import Protocols.LeastCongestionRouting;
 import Protocols.RoutingProtocol;
 
 public class Main {
@@ -24,8 +24,8 @@ public class Main {
     }
     
     public static Graph GRAPH = GraphGenerator.generateCloseConnectGraph(100, .3, new double[][]{{-500, 500}, {-500, 500}}, LinkMetric.congestion);
-    //public static RoutingProtocol PROTOCOL = new DistanceVector(GRAPH);
-    public static RoutingProtocol PROTOCOL = new CongestionRouting(GRAPH);
+    //public static RoutingProtocol PROTOCOL = new FewestHopsRouting(GRAPH);
+    public static RoutingProtocol PROTOCOL = new LeastCongestionRouting(GRAPH);
     public static Router ROUTER = new Router(GRAPH);
     public static Metric[] METRICS = new Metric[]{new WorstLink()};
     

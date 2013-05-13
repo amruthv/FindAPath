@@ -6,10 +6,10 @@ import network.Graph;
 import network.Node;
 import network.Packet;
 
-public class CongestionRouting extends RoutingProtocol {
+public class LeastCongestionRouting extends RoutingProtocol {
 	public Graph graph;
 	
-	public CongestionRouting(Graph g){
+	public LeastCongestionRouting(Graph g){
 		this.graph=g;
 	}
 	

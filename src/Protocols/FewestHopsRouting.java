@@ -6,13 +6,11 @@ import network.Graph;
 import network.Node;
 import network.Packet;
 
-
-
-public class DistanceVector extends RoutingProtocol {
+public class FewestHopsRouting extends RoutingProtocol {
 	
 	public Graph g;
 	
-	public DistanceVector(Graph g){
+	public FewestHopsRouting(Graph g){
 		this.g=g;
 		g.computeAllNextInPath();
 	}
