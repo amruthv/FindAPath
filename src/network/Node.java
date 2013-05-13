@@ -16,6 +16,7 @@ public class Node {
 	public final Set<Link> outLinks;
 	public final Map<Integer, Integer> selfTraffic;
 	public int id;
+	public double centrality;
     
     public Node(double x, double y) {
     	loc = new Point(x, y);

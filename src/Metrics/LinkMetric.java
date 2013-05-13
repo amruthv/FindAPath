@@ -26,5 +26,11 @@ public interface LinkMetric {
 		}
 	};
 	
+	static LinkMetric centrality = new LinkMetric() {
+		public double getCost(Link l) {
+			return Math.pow(l.fromNode.centrality, 2) + Math.pow(l.toNode.centrality, 2);
+		}
+	};
+	
 	public double getCost(Link l);
 }

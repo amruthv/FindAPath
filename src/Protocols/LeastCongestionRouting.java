@@ -3,14 +3,16 @@ package Protocols;
 import java.util.List;
 import java.util.Map;
 
+import Metrics.LinkMetric;
+
 import network.Graph;
 import network.Node;
 import network.Packet;
 
-public class CongestionRouting extends DynamicProtocol {
+public class LeastCongestionRouting extends DynamicProtocol {
 	public Graph graph;
 	
-	public CongestionRouting(Graph g){
+	public LeastCongestionRouting(Graph g){
 		this.graph=g;
 	}
 	

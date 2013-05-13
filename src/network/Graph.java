@@ -1,6 +1,7 @@
 package network;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -34,13 +35,14 @@ public class Graph {
 		this.adjacency= new int[numNodes][numNodes];
 		
 		for (int i = 0; i < nodes.size(); i++)
-			nodes.get(i).id = i;
-		calcShortestPaths();
-		
+			nodes.get(i).id = i;		
 	}
 	
 	
 	public void calcShortestPaths() {
+		
+		if (lm == LinkMetric.centrality)
+			setCentralities();
 		
 		//Initialize all distances to infinity
 		for (int i=0; i<numNodes;i++){
@@ -191,7 +193,7 @@ public class Graph {
 	public double[] calcKatzCentrality() {
 		int n = nodes.size();
 		
-		double alpha = .04;
+		double alpha = .02;
 		SimpleMatrix a = getAdjacencyMatrix();
 		SimpleMatrix v = new SimpleMatrix(new double[n][1]);
 		for (int i = 0; i<n; i++)
@@ -206,6 +208,13 @@ public class Graph {
 			result[i] = katz.get(i,0);
 		
 		return result;
+	}
+	
+	public void setCentralities() {
+		double[] centralities = calcKatzCentrality();
+		System.out.println(Arrays.toString(centralities));
+		for (int i = 0; i < numNodes; i++)
+			nodes.get(i).centrality = centralities[i];
 	}
 
 	public double[] pageRank() {

@@ -2,19 +2,19 @@ package Protocols;
 
 import java.util.List;
 
+import Metrics.LinkMetric;
+
 import network.Graph;
 import network.Node;
 import network.Packet;
 
-
-
-public class DistanceVector extends RoutingProtocol {
+public class FewestHopsRouting extends RoutingProtocol {
 	
 	public Graph g;
 	
-	public DistanceVector(Graph g){
-		this.g=g;
-		g.computeAllNextInPath();
+	public FewestHopsRouting(Graph g){
+		this.g = g;
+		lm = LinkMetric.cost;
 	}
 	
 	@Override
