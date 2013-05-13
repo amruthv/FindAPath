@@ -22,8 +22,6 @@ public class AvoidCentralityRouting extends RoutingProtocol {
 		for (Packet p : packets) {
 			if (sender.id == p.destination)
 				continue;
-			if (sender.id == p.destination)
-				return;
 			int nextNodeID = (g.nextNodeInPath.get(sender.id)).get(p.destination);
 			sender.getOutLinkToNode(nextNodeID).addPacket(p);
 		}

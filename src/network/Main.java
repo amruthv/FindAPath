@@ -29,7 +29,6 @@ public class Main {
 //  public static RoutingProtocol PROTOCOL = new LeastCongestionRouting(GRAPH);
 //  public static RoutingProtocol PROTOCOL = new AvoidCentralityRouting(GRAPH);
   public static RoutingProtocol PROTOCOL = new LeastBusyNeighborRouting(GRAPH);
-
     public static Router ROUTER = new Router(GRAPH);
     public static Metric[] METRICS = new Metric[]{new WorstLink(), new SquaredSums(), new LinkVariance()};
     
