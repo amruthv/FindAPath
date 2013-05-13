@@ -32,5 +32,12 @@ public interface LinkMetric {
 		}
 	};
 	
+	static LinkMetric hops = new LinkMetric() {
+		public double getCost(Link l) {
+			return 1.0;
+		}
+	};
+	
+	
 	public double getCost(Link l);
 }
