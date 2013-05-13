@@ -1,11 +1,11 @@
 package network;
 
-import java.util.Arrays;
-
 import vis.GraphView;
 import Metrics.LinkMetric;
 import Metrics.Metric;
 import Metrics.WorstLink;
+import Protocols.CongestionRouting;
+import Protocols.RoutingProtocol;
 
 public class Main {
     public static void main(String[] args) {
@@ -23,7 +23,7 @@ public class Main {
         //new GraphView(g);
     }
     
-    public static Graph GRAPH = GraphGenerator.generateCloseConnectGraph(10, .2, new double[][]{{-500, 500}, {-500, 500}}, LinkMetric.congestion);
+    public static Graph GRAPH = GraphGenerator.generateCloseConnectGraph(100, 1, new double[][]{{-500, 500}, {-500, 500}}, LinkMetric.congestion);
     //public static RoutingProtocol PROTOCOL = new DistanceVector(GRAPH);
     public static RoutingProtocol PROTOCOL = new CongestionRouting(GRAPH);
     public static Router ROUTER = new Router(GRAPH);

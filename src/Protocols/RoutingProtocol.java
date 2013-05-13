@@ -1,4 +1,7 @@
-package network;
+package Protocols;
+
+import network.Node;
+import network.Packet;
 
 public abstract class RoutingProtocol {
 	

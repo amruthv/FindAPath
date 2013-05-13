@@ -1,4 +1,8 @@
-package network;
+package Protocols;
+
+import network.Graph;
+import network.Node;
+import network.Packet;
 
 
 
