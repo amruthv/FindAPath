@@ -38,7 +38,7 @@ public class Graph {
 	}
 
 	public void calcShortestPaths() {
-		System.out.println("in calc shortest paths");
+//		System.out.println("in calc shortest paths");
 		
 		if (lm == LinkMetric.centrality)
 			setCentralities();
@@ -91,7 +91,9 @@ public class Graph {
 			}
 		}
 
-
+//		for (int i=0;i<numNodes;i++){
+//			System.out.println("self-dist "+i+": "+dist[i][i]);
+//		}
 		// Reconstruct shortest paths
 		computeAllNextInPath();
 	}
@@ -223,7 +225,7 @@ public class Graph {
 
 	public void setCentralities() {
 		double[] centralities = calcKatzCentrality(.05);
-		System.out.println(Arrays.toString(centralities));
+//		System.out.println(Arrays.toString(centralities));
 		for (int i = 0; i < numNodes; i++)
 			nodes.get(i).centrality = centralities[i];
 	}

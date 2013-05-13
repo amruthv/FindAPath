@@ -43,4 +43,9 @@ public class LeastBusyNeighborRouting extends RoutingProtocol {
 			throw new IllegalArgumentException("No closer node");
 		return minBusyID;
 	}
+	
+	@Override
+	public String toString(){
+		return "LeastBusyNeighborRouting";
+	}
 }

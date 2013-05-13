@@ -27,4 +27,9 @@ public class FewestHopsRouting extends RoutingProtocol {
 		}
 	}
 	
+	@Override
+	public String toString(){
+		return "FewestHopsRouting";
+	}
+	
 }

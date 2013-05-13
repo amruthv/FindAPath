@@ -27,5 +27,10 @@ public class AvoidCentralityRouting extends RoutingProtocol {
 		}
 	}
 	
+	@Override
+	public String toString(){
+		return "AvoidCentralityRouting";
+	}
+	
 
 }
