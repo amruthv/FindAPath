@@ -53,6 +53,9 @@ public class GraphView extends JFrame {
 	private double x_min = X_MIN_INITIAL;
 	private double y_max = Y_MAX_INITIAL;
 	private double y_min = Y_MIN_INITIAL;
+	
+	private Color linkColor = Color.BLUE;
+	private Color packetColor = Color.RED;
 
 	private MyMouseListener ml = new MyMouseListener();
 
@@ -234,7 +237,6 @@ public class GraphView extends JFrame {
 
 		private void paintLinks(Graphics2D g) {
 			Stroke s = g.getStroke();
-			System.out.println("cycle");
 			Link in, out;
 			for (Node n : graph.nodes) {
 				for (int i = 0; i < n.inLinks.size(); i++) {
@@ -247,7 +249,7 @@ public class GraphView extends JFrame {
 					
 					
 					g.setStroke(new BasicStroke((float)(2)));
-					paintLink(g, out, Color.blue);
+					paintLink(g, out, linkColor);
 					//g.setStroke(new BasicStroke((float)(5*Math.random()*Math.random())));
 					//g.setStroke(new BasicStroke(1f));
 					//paintLink(g, l, Color.white);
@@ -255,13 +257,18 @@ public class GraphView extends JFrame {
 					
 					
 					
+					int total = in.packets.size() + out.packets.size();
+					if (total == 0)
+						continue;
+					double width = (out.length()/total)-4;
+					if (width < 0) {width = 0;}
 					
-					double width = (out.length()/1*Math.random());
+					
 					BasicStroke stroke = new BasicStroke(4.0f, BasicStroke.CAP_BUTT, BasicStroke.JOIN_MITER,
 					        10.0f, new float[]{4.0f, (float)(width)}, 0.0f);
 					g.setStroke(stroke);
 					
-					paintLink(g, out, Color.red);
+					paintLink(g, out, packetColor);
 				}
 			}
 			
@@ -270,7 +277,8 @@ public class GraphView extends JFrame {
 
 		private void paintNodes(Graphics2D g) {
 			//double[] cent = graph.calcDegreeCentrality();
-			double[] cent = graph.calcKatzCentrality();
+			//double[] cent = graph.calcKatzCentrality(.05);
+			double[] cent = graph.calcPageRank(.95);
 
 			double max = Utils.getMax(cent);
 			double min = Utils.getMin(cent);
@@ -279,6 +287,7 @@ public class GraphView extends JFrame {
 		
 			for (int i = 0 ; i < graph.nodes.size(); i++) {
 				n = graph.nodes.get(i);
+				System.out.println(cent[i]);
 				paintPoint(g, n.loc, getColoring(cent[i], .65, min, max), 10);
 			}
 		}
@@ -298,7 +307,7 @@ public class GraphView extends JFrame {
 		private void paintPoint(Graphics2D g, Point p, Color c, double size) {
 			g.setColor(c);
 			g.fill(new Ellipse2D.Double(p.x-size/2, p.y-size/2, size, size));
-			g.setColor(Color.blue);
+			g.setColor(linkColor);
 			g.draw(new Ellipse2D.Double(p.x-size/2, p.y-size/2, size, size));
 		}
 

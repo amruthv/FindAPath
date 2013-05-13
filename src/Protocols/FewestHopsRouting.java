@@ -14,7 +14,7 @@ public class FewestHopsRouting extends RoutingProtocol {
 	
 	public FewestHopsRouting(Graph g){
 		this.g = g;
-		this.lm = LinkMetric.cost;
+		lm = LinkMetric.hops;
 	}
 	
 	@Override
