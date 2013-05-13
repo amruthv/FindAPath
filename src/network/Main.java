@@ -8,12 +8,6 @@ import Metrics.WorstLink;
 
 public class Main {
     public static void main(String[] args) {
-    	/*
-    	Graph g = GraphGenerator.generateCloseConnectGraph(10, .1, new double[][] {{0, 1}, {0, 1}});
-    	for (int i = 0; i < 10; i++)
-    		System.out.println(Arrays.toString(g.dist[i]));
-    	System.out.println(g.nextNodeInPath.get(0).get(0));
-    	new GraphView(g);*/
     	runSolution();
     }
     
