@@ -12,6 +12,7 @@ public class Router {
 	}
 	
 	public void routeAllNodes(int numTimes, RoutingProtocol protocol) {
+		graph.flushGraph();
 		graph.lm = protocol.lm;
 		graph.calcShortestPaths();
 		for (int i = 0; i < numTimes; i++) {

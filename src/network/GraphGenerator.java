@@ -14,7 +14,6 @@ public class GraphGenerator {
 	public static Graph generateCloseConnectGraph(int n, double threshold, double[][] range) {
 		List<Node> nodes = makeRandomPoints(n, range);
 		double size = .5 * (range[0][1] - range[0][0] + range[1][1] - range[1][0]);
-		//System.out.println(size);
 		for (int i = 0; i < n; i++) {
 			for (int j = 0; j < i; j++) {
 				Node n1 = nodes.get(i);

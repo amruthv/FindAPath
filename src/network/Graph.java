@@ -35,7 +35,22 @@ public class Graph {
 		for (int i = 0; i < nodes.size(); i++)
 			nodes.get(i).id = i;
 	}
-
+	
+	public void flushGraph(){
+		for (Node node: nodes){
+			for (Link inlink: node.inLinks){
+				inlink.flushPackets();
+			}
+		}
+		this.nextNodeInPath = new HashMap<Integer, Map<Integer, Integer>>();
+		this.shortestPaths = new HashMap<Integer, Map<Integer, List<Integer>>>();
+		this.numNodes = this.nodes.size();
+		this.dist = new double[numNodes][numNodes];
+		this.next = new Double[numNodes][numNodes];
+		this.adjacency = new int[numNodes][numNodes];
+		
+	}
+	
 	public void calcShortestPaths() {
 		if (lm == LinkMetric.centrality)
 			setCentralities();
@@ -58,10 +73,6 @@ public class Graph {
 		for (int i = 0; i < numNodes; i++) {
 			dist[i][i] = 0;
 		}
-
-		// for (int i=0;i<numNodes;i++){
-		// System.out.println("self-dist "+i+": "+dist[i][i]);
-		// }
 		
 		
 		// Initialize all edges in matrix
@@ -73,10 +84,6 @@ public class Graph {
 				}
 			}
 		}
-
-		// for (int i=0;i<numNodes;i++){
-		// System.out.println("self-dist "+i+": "+dist[i][i]);
-		// }
 
 		// Compute shortest distances
 		for (int k = 0; k < numNodes; k++) {
@@ -257,11 +264,9 @@ public class Graph {
 
 		double[] result = new double[nodes.size()];
 
-		System.out.println(shortestPaths.size());
 
 		for (Map<Integer, List<Integer>> paths : shortestPaths.values()) {
 			for (List<Integer> path : paths.values()) {
-				System.out.println(path.size());
 				for (Integer id : path) {
 					result[id]++;
 				}
@@ -290,8 +295,7 @@ public class Graph {
 	}
 
 	public void setCentralities() {
-		double[] centralities = calcKatzCentrality(.05);
-//		System.out.println(Arrays.toString(centralities));
+		double[] centralities = calcPageRank(.25);
 		for (int i = 0; i < numNodes; i++)
 			nodes.get(i).centrality = centralities[i];
 	}

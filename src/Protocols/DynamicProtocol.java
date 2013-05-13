@@ -45,11 +45,9 @@ public class DynamicProtocol extends RoutingProtocol {
 		for(NodeIDDistPair p: pairs) {
 			distances.add(p);
 		}
-//		System.out.println("distances priority queue: "+distances.toString());
 		nextNodeInPath.put(sID, sID);
 		while (distances.size()!=0){
 			NodeIDDistPair min = distances.poll();
-//			System.out.println("node min id:" + min.id);
 			dist[min.id]=min.dist;
 			if (min.dist==Integer.MAX_VALUE){
 				break;
@@ -59,8 +57,6 @@ public class DynamicProtocol extends RoutingProtocol {
 				double neighborCost=pairs.get(neighborID).dist;
 				double newPathCost =  min.dist + g.lm.getCost(l);
 				if (neighborCost > newPathCost){
-//					System.out.println("neighbor Ids: "+ neighborID);
-//					System.out.println("neighbor cost was more: " + neighborCost + " newPathCost: "+newPathCost);
 					NodeIDDistPair neighborToUpdate= pairs.get(neighborID);
 					distances.remove(neighborToUpdate);
 					neighborToUpdate.dist=newPathCost;
