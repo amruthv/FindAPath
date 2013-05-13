@@ -37,4 +37,9 @@ public class RandomizedRouting extends RoutingProtocol {
 		}
 		return closerNeighbors.get((int) (closerNeighbors.size() * Math.random()));
 	}
+	
+	@Override
+	public String toString(){
+		return "RandomizedRoutingProtocol";
+	}
 }

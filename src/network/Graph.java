@@ -1,16 +1,15 @@
 package network;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.PriorityQueue;
-import java.util.Set;
 
 import org.ejml.simple.SimpleMatrix;
 
 import utils.NodeIDDistPair;
+
 import Metrics.LinkMetric;
 
 public class Graph {
@@ -38,8 +37,6 @@ public class Graph {
 	}
 
 	public void calcShortestPaths() {
-		System.out.println("in calc shortest paths");
-
 		if (lm == LinkMetric.centrality)
 			setCentralities();
 
@@ -65,6 +62,8 @@ public class Graph {
 		// for (int i=0;i<numNodes;i++){
 		// System.out.println("self-dist "+i+": "+dist[i][i]);
 		// }
+		
+		
 		// Initialize all edges in matrix
 		for (Node node : this.nodes) {
 			List<Link> outedges = node.outLinks;
@@ -291,8 +290,8 @@ public class Graph {
 	}
 
 	public void setCentralities() {
-		double[] centralities = calcPageRank(.3);
-		System.out.println(Arrays.toString(centralities));
+		double[] centralities = calcKatzCentrality(.05);
+//		System.out.println(Arrays.toString(centralities));
 		for (int i = 0; i < numNodes; i++)
 			nodes.get(i).centrality = centralities[i];
 	}
