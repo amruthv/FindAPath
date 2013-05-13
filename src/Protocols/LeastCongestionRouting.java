@@ -25,6 +25,8 @@ public class LeastCongestionRouting extends DynamicProtocol {
 		Map<Integer,Integer> nextNodeInPath = sssp(sender, graph);
 //		System.out.println(nextNodeInPath.toString());
 		for (Packet p : packets) {
+			if (sender.id == p.destination)
+				continue;
 //			System.out.println("packet destination: "+p.destination);
 			int nextNodeID = (nextNodeInPath).get(p.destination);
 			sender.getOutLinkToNode(nextNodeID).addPacket(p);

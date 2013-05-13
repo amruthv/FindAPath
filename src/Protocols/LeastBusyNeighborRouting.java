@@ -17,12 +17,10 @@ public class LeastBusyNeighborRouting extends RoutingProtocol {
 		this.lm=LinkMetric.cost;
 	}
 	
-	
-	
 	@Override
 	public void route(Node sender, List<Packet> packets) {
 		for (Packet p : packets) {
-			if (p.destination == sender.id)
+			if (sender.id == p.destination)
 				continue;
 			int nextNodeID = getLeastBusyNeighbor(sender, p.destination);
 			sender.getOutLinkToNode(nextNodeID).addPacket(p);

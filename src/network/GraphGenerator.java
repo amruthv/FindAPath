@@ -58,7 +58,7 @@ public class GraphGenerator {
 		return new Graph(nodes);
 	}
 	
-	public static Graph generateHierachGraph(int n, double alpha, double beta, double[][] range, LinkMetric lm, boolean dynamic) {
+	public static Graph generateHierachGraph(int n, double alpha, double beta, double[][] range) {
 		int m = (int) Math.sqrt(n);
 		double size = .5 * (range[0][1] - range[0][0] + range[1][1] - range[1][0]);
 		Graph layout = generateCloseProbGraph(m, alpha, beta, range);

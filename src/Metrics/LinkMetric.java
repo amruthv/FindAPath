@@ -22,7 +22,7 @@ public interface LinkMetric {
 	
 	static LinkMetric congestion = new LinkMetric() {
 		public double getCost(Link l) {
-			return l.packets.size();
+			return l.capacity;
 		}
 	};
 	

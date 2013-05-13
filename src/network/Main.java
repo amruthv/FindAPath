@@ -1,7 +1,6 @@
 package network;
 
 import vis.GraphView;
-import Metrics.LinkMetric;
 import Metrics.LinkVariance;
 import Metrics.Metric;
 import Metrics.SquaredSums;
@@ -10,7 +9,6 @@ import Protocols.*;
 
 public class Main {
     public static void main(String[] args) {
-    	//seeGraphs();
     	runSolution(true);
     }
     
@@ -20,12 +18,13 @@ public class Main {
         //Graph g = GraphGenerator.generateHierachGraph(200, .8, 3, new double[][] {{-250,250},{-250,250}}, LinkMetric.centrality, false);
         //Graph g = GraphGenerator.generateHierachGraph(20, .6, .6, new double[][] {{-25,25},{-25,25}}, LinkMetric.centrality, false);
         new GraphView(g);
+
     }
     
     //public static Graph GRAPH = GraphGenerator.generateCloseConnectGraph(100, .2, new double[][]{{-500, 500}, {-500, 500}});
     public static Graph GRAPH = GraphGenerator.generateCloseProbGraph(200, 12, 30, new double[][]{{-500, 500}, {-500, 500}});
     //public static Graph GRAPH = GraphGenerator.generatePrefGraph(200, 1.6, 20, 3, new double[][]{{-500, 500}, {-500, 500}});
-    
+
     public static RoutingProtocol[] PROTOCOL = new RoutingProtocol[]{new FewestHopsRouting(GRAPH),
     	//new LeastCongestionRouting(GRAPH),
     	new AvoidCentralityRouting(GRAPH),
@@ -33,7 +32,7 @@ public class Main {
     	new LeastBusyLinkRouting(GRAPH),
     	new RandomizedRouting(GRAPH),
     };
-    
+
     public static Router ROUTER = new Router(GRAPH);
     public static Metric[] METRICS = new Metric[]{new WorstLink(), new SquaredSums(), new LinkVariance()};
     

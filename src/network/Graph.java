@@ -6,6 +6,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.PriorityQueue;
+import java.util.Set;
 
 import org.ejml.simple.SimpleMatrix;
 
@@ -56,10 +57,11 @@ public class Graph {
 			}
 		}
 
-		// Initialize all self-distances
-		for (int i = 0; i < numNodes; i++) {
-			dist[i][i] = 0;
+		//Initialize all self-distances
+		for (int i=0;i<numNodes;i++){
+			dist[i][i]=0;
 		}
+
 		// Initialize all edges in matrix
 		for (Node node : this.nodes) {
 			List<Link> outedges = node.outLinks;
@@ -70,17 +72,25 @@ public class Graph {
 						.getCost(outlink);
 			}
 		}
-		// Compute shortest distances
-		for (int k = 0; k < numNodes; k++) {
-			for (int i = 0; i < numNodes; i++) {
-				for (int j = 0; j < numNodes; j++) {
-					if (dist[i][k] + dist[k][j] < dist[i][j]) {
-						dist[i][j] = dist[i][k] + dist[k][j];
-						next[i][j] = new Double(k);
+
+		
+//		for (int i=0;i<numNodes;i++){
+//			System.out.println("self-dist "+i+": "+dist[i][i]);
+//		}
+
+		
+		//Compute shortest distances
+		for (int k=0;k<numNodes;k++){
+			for (int i=0;i<numNodes;i++){
+				for (int j=0;j<numNodes;j++){
+					if (dist[i][k]+dist[k][j] < dist[i][j]){
+						dist[i][j]=dist[i][k]+dist[k][j];
+						next[i][j]=new Double(k);
 					}
 				}
 			}
 		}
+
 
 		// Reconstruct shortest paths
 		computeAllNextInPath();
