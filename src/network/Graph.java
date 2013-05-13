@@ -60,6 +60,11 @@ public class Graph {
 		for (int i=0;i<numNodes;i++){
 			dist[i][i]=0;
 		}
+		
+		for(int i=0;i<numNodes;i++){
+			System.out.println("self-dist "+i+": "+dist[i][i]);
+		}
+		
 		//Initialize all edges in matrix
 		for (Node node: this.nodes){
 			Set<Link> outedges= node.outLinks;
@@ -67,6 +72,11 @@ public class Graph {
 				dist[outlink.fromNode.id][outlink.toNode.id]=lm.getCost(outlink);
 			}
 		}
+		
+		for(int i=0;i<numNodes;i++){
+			System.out.println("self-dist "+i+": "+dist[i][i]);
+		}
+		
 		//Compute shortest distances
 		for (int k=0;k<numNodes;k++){
 			for (int i=0;i<numNodes;i++){
@@ -77,6 +87,10 @@ public class Graph {
 					}
 				}
 			}
+		}
+		
+		for(int i=0;i<numNodes;i++){
+			System.out.println("self-dist "+i+": "+dist[i][i]);
 		}
 		
 		//Reconstruct shortest paths
