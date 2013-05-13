@@ -9,7 +9,7 @@ import network.Packet;
 
 public abstract class RoutingProtocol {
 	
-	public LinkMetric lm = null;
+	public LinkMetric lm;
 	
 	public void route(Node sender, List<Packet> p) {
 	}

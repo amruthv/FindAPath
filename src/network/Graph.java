@@ -18,19 +18,18 @@ public class Graph {
 	public List<Node> nodes;
 	public Map<Integer, Map<Integer, Integer>> nextNodeInPath;
 	public Map<Integer, Map<Integer, List<Integer>>> shortestPaths;
-	double[][] dist;
-	Double[][] next;
+	public double[][] dist;
+	public Double[][] next;
 	public int numNodes;
 	public LinkMetric lm;
 	
-	public Graph(List<Node> nodes, LinkMetric lm) {
+	public Graph(List<Node> nodes) {
 		this.nodes = nodes;
 		this.nextNodeInPath=new HashMap<Integer, Map<Integer,Integer>>();
 		this.shortestPaths= new HashMap<Integer, Map<Integer,List<Integer>>>();
 		this.numNodes=this.nodes.size();
 		this.dist = new double[numNodes][numNodes];
 		this.next = new Double[numNodes][numNodes];
-		this.lm=lm;
 		
 		for (int i = 0; i < nodes.size(); i++)
 			nodes.get(i).id = i;		
@@ -38,6 +37,7 @@ public class Graph {
 	
 	
 	public void calcShortestPaths() {
+		System.out.println("in calc shortest paths");
 		
 		if (lm == LinkMetric.centrality)
 			setCentralities();

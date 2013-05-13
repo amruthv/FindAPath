@@ -2,19 +2,19 @@ package Protocols;
 
 import java.util.List;
 
-import Metrics.LinkMetric;
-
 import network.Graph;
 import network.Node;
 import network.Packet;
+import Metrics.LinkMetric;
 
-public class FewestHopsRouting extends RoutingProtocol {
+import Metrics.LinkMetric;
+
+public class RandomizedRouting extends RoutingProtocol {
+	public Graph graph;
+	public LinkMetric lm=LinkMetric.cost;
 	
-	public Graph g;
-	
-	public FewestHopsRouting(Graph g){
-		this.g = g;
-		this.lm = LinkMetric.cost;
+	public RandomizedRouting(Graph g){
+		this.graph=g;
 	}
 	
 	@Override
@@ -22,9 +22,8 @@ public class FewestHopsRouting extends RoutingProtocol {
 		for (Packet p : packets) {
 			if (sender.id == p.destination)
 				return;
-			int nextNodeID = (g.nextNodeInPath.get(sender.id)).get(p.destination);
+			int nextNodeID = (graph.nextNodeInPath.get(sender.id)).get(p.destination);
 			sender.getOutLinkToNode(nextNodeID).addPacket(p);
 		}
 	}
-	
 }

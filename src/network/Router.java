@@ -12,11 +12,8 @@ public class Router {
 	}
 	
 	public void routeAllNodes(int numTimes, RoutingProtocol protocol) {
-		if (protocol.lm != null) {
-			graph.lm = protocol.lm;
-			graph.calcShortestPaths();
-		}
-		System.out.println("in routing");
+		graph.lm = protocol.lm;
+		graph.calcShortestPaths();
 		for (int i = 0; i < numTimes; i++) {
 			if (i%100==0){
 				System.out.println(i);

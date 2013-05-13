@@ -13,7 +13,6 @@ public class NodeIDDistPair {
 	}
 
 	public int compareTo(NodeIDDistPair o) {
-//		System.out.println("in compareTo");
 		if (this.dist < o.dist){
 			return -1;
 		}
