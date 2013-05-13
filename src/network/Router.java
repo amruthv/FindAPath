@@ -27,9 +27,15 @@ public class Router {
 		return packets;
 	}
 	
-	public void routeAllNodes(int numTimes, RoutingProtocol protocol) {
+	public void routeAllNodes(int numTimes, RoutingProtocol protocol, boolean dynamic) {
+		System.out.println("in routing");
 		for (int i = 0; i < numTimes; i++) {
+			if (i%100==0){
+				System.out.println(i);
+			}
 			for (Node sender : graph.nodes) {
+				if (dynamic)
+					this.graph.sssp(sender);
 				for (Packet p : getPacketsAtNode(sender))
 					protocol.route(sender, p);
 			}
