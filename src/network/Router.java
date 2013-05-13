@@ -35,12 +35,8 @@ public class Router {
 			if (i%100==0){
 				System.out.println(i);
 			}
-			for (Node sender : graph.nodes) {
-				if (dynamic)
-					this.graph.sssp(sender);
-				for (Packet p : getPacketsAtNode(sender))
-					protocol.route(sender, p);
-			}
+			for (Node sender : graph.nodes)
+					protocol.route(sender, getPacketsAtNode(sender));
 		}
 	}
 	

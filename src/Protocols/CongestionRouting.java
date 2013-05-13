@@ -12,7 +12,7 @@ public class CongestionRouting extends RoutingProtocol {
 	}
 	
 	@Override
-	public void route(Node sender, Packet p){
+	public void route(Node sender, List<Packet> p) {
 		if (sender.id == p.destination)
 			return;
 		System.out.println("packet destination: "+p.destination);
