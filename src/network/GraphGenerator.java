@@ -1,6 +1,7 @@
 package network;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import Metrics.LinkMetric;
@@ -50,7 +51,7 @@ public class GraphGenerator {
 			for (int j = 0; j < i; j++) {
 				Node n1 = nodes.get(i);
 				Node n2 = nodes.get(j);
-				if (Math.random() < alpha * alphas[i] * alphas[j] * Math.pow(Math.E, -beta * n1.distance(n2) / size))
+				if (Math.random() < alpha * Math.pow(alphas[i] * alphas[j], .7) * Math.pow(Math.E, -beta * n1.distance(n2) / size))
 					connect(n1, n2);
 			}
 		}
@@ -113,9 +114,6 @@ public class GraphGenerator {
 	}
 	
 	public static void connect(Node n1, Node n2) {
-		if (n1 == n2)
-			return;
-
 		Link link1 = new Link(n1, n2);
 		Link link2 = new Link(n2, n1);
 		n1.addLinks(link1, link2);

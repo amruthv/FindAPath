@@ -287,7 +287,7 @@ public class GraphView extends JFrame {
 		
 			for (int i = 0 ; i < graph.nodes.size(); i++) {
 				n = graph.nodes.get(i);
-				System.out.println(cent[i]);
+				//System.out.println(cent[i]);
 				paintPoint(g, n.loc, getColoring(cent[i], .65, min, max), 10);
 			}
 		}

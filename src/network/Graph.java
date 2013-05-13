@@ -64,6 +64,8 @@ public class Graph {
 		for (Node node : this.nodes) {
 			List<Link> outedges = node.outLinks;
 			for (Link outlink : outedges) {
+				if (outlink.fromNode.id == outlink.toNode.id)
+					throw new IllegalArgumentException("Self Link!");
 				dist[outlink.fromNode.id][outlink.toNode.id] = lm
 						.getCost(outlink);
 			}
@@ -176,7 +178,7 @@ public class Graph {
 
 	public void sssp(Node source) {
 		int sID = source.id;
-		System.out.println(nextNodeInPath.get(sID).toString());
+		//System.out.println(nextNodeInPath.get(sID).toString());
 		// Create hashmap for nextNodeInPath if necessary
 		if (!nextNodeInPath.containsKey(sID)) {
 			nextNodeInPath.put(sID, new HashMap<Integer, Integer>());
@@ -190,7 +192,7 @@ public class Graph {
 			nextNodeInPath.get(sID).put(i, null);
 		}
 		distances.addAll(pairs);
-		System.out.println("distances size: " + distances.size());
+		//System.out.println("distances size: " + distances.size());
 		// Initialize distances and self for base step of dijkstra
 		pairs.get(sID).dist = 0;
 		nextNodeInPath.get(sID).put(sID, sID);
@@ -205,9 +207,9 @@ public class Graph {
 				double neighborCost = pairs.get(neighborID).dist;
 				double newPathCost = min.dist + lm.getCost(l);
 				if (neighborCost > newPathCost) {
-					System.out.println("neighbor Ids: " + neighborID);
-					System.out.println("neighbor cost was more: "
-							+ neighborCost + " newPathCost: " + newPathCost);
+					//System.out.println("neighbor Ids: " + neighborID);
+					//System.out.println("neighbor cost was more: "
+							//+ neighborCost + " newPathCost: " + newPathCost);
 					pairs.get(neighborID).dist = newPathCost;
 					// Set the next node to forward to be the next node in the
 					// shortest path through u
@@ -223,8 +225,8 @@ public class Graph {
 				}
 			}
 		}
-		System.out.println(distances.toString());
-		System.out.println(nextNodeInPath.get(sID).toString());
+		//System.out.println(distances.toString());
+		//System.out.println(nextNodeInPath.get(sID).toString());
 
 	}
 
@@ -263,14 +265,13 @@ public class Graph {
 	}
 
 	public void setCentralities() {
-		double[] centralities = calcKatzCentrality(.05);
+		double[] centralities = calcPageRank(.3);
 		System.out.println(Arrays.toString(centralities));
 		for (int i = 0; i < numNodes; i++)
 			nodes.get(i).centrality = centralities[i];
 	}
 
 	public double[] calcPageRank(double alpha) {
-		System.out.println("prank!");
 		int n = nodes.size();
 
 		SimpleMatrix a = getAdjacencyMatrix();
