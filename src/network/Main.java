@@ -8,10 +8,6 @@ import Metrics.WorstLink;
 import Protocols.*;
 
 public class Main {
-    public static void main(String[] args) {
-//    	seeGraphs();
-    	runSolution(true);
-    }
     
     public static void seeGraphs() {
         Graph g = GraphGenerator.generateCloseConnectGraph(500, .08, new double[][] {{-250,250},{-250,250}});
@@ -45,4 +41,10 @@ public class Main {
             new GraphView(GRAPH);
     	}    	
     }
+    
+    public static void main(String[] args) {
+//    	seeGraphs();
+    	runSolution(true);
+    }
+
 }

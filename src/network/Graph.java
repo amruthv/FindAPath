@@ -1,16 +1,12 @@
 package network;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.PriorityQueue;
-import java.util.Set;
 
 import org.ejml.simple.SimpleMatrix;
 
-import utils.NodeIDDistPair;
 import Metrics.LinkMetric;
 
 public class Graph {
@@ -23,7 +19,7 @@ public class Graph {
 	public int numNodes;
 	public LinkMetric lm;
 	int[][] adjacency;
-	
+
 	public Graph(List<Node> nodes) {
 		this.nodes = nodes;
 		this.nextNodeInPath = new HashMap<Integer, Map<Integer, Integer>>();
@@ -38,8 +34,6 @@ public class Graph {
 	}
 
 	public void calcShortestPaths() {
-//		System.out.println("in calc shortest paths");
-		
 		if (lm == LinkMetric.centrality)
 			setCentralities();
 
@@ -57,43 +51,42 @@ public class Graph {
 			}
 		}
 
-		//Initialize all self-distances
-		for (int i=0;i<numNodes;i++){
-			dist[i][i]=0;
+		// Initialize all self-distances
+		for (int i = 0; i < numNodes; i++) {
+			dist[i][i] = 0;
 		}
-//		for (int i=0;i<numNodes;i++){
-//			System.out.println("self-dist "+i+": "+dist[i][i]);
-//		}
-		//Initialize all edges in matrix
-		for (Node node: this.nodes){
-			List<Link> outedges= node.outLinks;
-			for (Link outlink: outedges){
-				if (outlink.fromNode.id!=outlink.toNode.id){
-					dist[outlink.fromNode.id][outlink.toNode.id]=lm.getCost(outlink);
+
+		// for (int i=0;i<numNodes;i++){
+		// System.out.println("self-dist "+i+": "+dist[i][i]);
+		// }
+		
+		
+		// Initialize all edges in matrix
+		for (Node node : this.nodes) {
+			List<Link> outedges = node.outLinks;
+			for (Link outlink : outedges) {
+				if (outlink.fromNode.id != outlink.toNode.id) {
+					dist[outlink.fromNode.id][outlink.toNode.id] = lm.getCost(outlink);
 				}
 			}
 		}
-		
-//		for (int i=0;i<numNodes;i++){
-//			System.out.println("self-dist "+i+": "+dist[i][i]);
-//		}
 
-		
-		//Compute shortest distances
-		for (int k=0;k<numNodes;k++){
-			for (int i=0;i<numNodes;i++){
-				for (int j=0;j<numNodes;j++){
-					if (dist[i][k]+dist[k][j] < dist[i][j]){
-						dist[i][j]=dist[i][k]+dist[k][j];
-						next[i][j]=new Double(k);
+		// for (int i=0;i<numNodes;i++){
+		// System.out.println("self-dist "+i+": "+dist[i][i]);
+		// }
+
+		// Compute shortest distances
+		for (int k = 0; k < numNodes; k++) {
+			for (int i = 0; i < numNodes; i++) {
+				for (int j = 0; j < numNodes; j++) {
+					if (dist[i][k] + dist[k][j] < dist[i][j]) {
+						dist[i][j] = dist[i][k] + dist[k][j];
+						next[i][j] = new Double(k);
 					}
 				}
 			}
 		}
 
-//		for (int i=0;i<numNodes;i++){
-//			System.out.println("self-dist "+i+": "+dist[i][i]);
-//		}
 		// Reconstruct shortest paths
 		computeAllNextInPath();
 	}
@@ -174,12 +167,13 @@ public class Graph {
 		// reachable
 		else {
 			Double intermediate = next[i][j];
-			int interVal = (int) intermediate.doubleValue();
+
 			// no intermediate node. Edge between them is shortest path
 			if (intermediate == null) {
 				paths.add(j);
 				return paths;
 			} else {
+				int interVal = (int) intermediate.doubleValue();
 				List<Integer> firstPart = getWholePath(i, interVal);
 				List<Integer> secondPart = getWholePath(interVal, j);
 				firstPart.addAll(secondPart);
@@ -187,7 +181,6 @@ public class Graph {
 			}
 		}
 	}
-
 
 	public int calcDiameter() {
 		return 0;
@@ -202,7 +195,23 @@ public class Graph {
 	}
 
 	public double[] calcBetweenessCentrality() {
-		return null;
+		calcShortestPaths();
+		computeAllWholePaths();
+
+		double[] result = new double[nodes.size()];
+
+		System.out.println(shortestPaths.size());
+
+		for (Map<Integer, List<Integer>> paths : shortestPaths.values()) {
+			for (List<Integer> path : paths.values()) {
+				System.out.println(path.size());
+				for (Integer id : path) {
+					result[id]++;
+				}
+			}
+		}
+
+		return result;
 	}
 
 	public double[] calcKatzCentrality(double alpha) {
@@ -231,7 +240,7 @@ public class Graph {
 	}
 
 	public double[] calcPageRank(double alpha) {
-//		System.out.println("prank!");
+		// System.out.println("prank!");
 		int n = nodes.size();
 
 		SimpleMatrix a = getAdjacencyMatrix();
@@ -239,17 +248,17 @@ public class Graph {
 		for (int i = 0; i < n; i++)
 			v.set(i, 0, 1);
 
-		SimpleMatrix degIdent = new SimpleMatrix(n,n);
-		SimpleMatrix prank = new SimpleMatrix(n,n);
+		SimpleMatrix degIdent = new SimpleMatrix(n, n);
+		SimpleMatrix prank = new SimpleMatrix(n, n);
 		int deg;
 		for (int i = 0; i < n; i++) {
 			deg = nodes.get(i).outLinks.size();
-			degIdent.set(i,i, deg > 0 ? deg : 1);
+			degIdent.set(i, i, deg > 0 ? deg : 1);
 		}
-				
+
 		prank = degIdent.minus(a.scale(alpha).transpose());
 		prank = degIdent.mult(prank.invert()).mult(v);
-		
+
 		double[] result = new double[n];
 		for (int i = 0; i < n; i++)
 			result[i] = prank.get(i, 0);
