@@ -11,6 +11,7 @@ import network.Packet;
 
 public class LeastCongestionRouting extends DynamicProtocol {
 	public Graph graph;
+	public LinkMetric lm = LinkMetric.congestion;
 	
 	public LeastCongestionRouting(Graph g){
 		this.graph=g;

@@ -22,7 +22,6 @@ public class Graph {
 	Double[][] next;
 	public int numNodes;
 	public LinkMetric lm;
-	int[][] adjacency;
 	
 	public Graph(List<Node> nodes, LinkMetric lm) {
 		this.nodes = nodes;
@@ -32,7 +31,6 @@ public class Graph {
 		this.dist = new double[numNodes][numNodes];
 		this.next = new Double[numNodes][numNodes];
 		this.lm=lm;
-		this.adjacency= new int[numNodes][numNodes];
 		
 		for (int i = 0; i < nodes.size(); i++)
 			nodes.get(i).id = i;		
