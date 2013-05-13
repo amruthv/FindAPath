@@ -20,8 +20,6 @@ public class RandomizedRouting extends RoutingProtocol {
 	
 	@Override
 	public void route(Node sender, List<Packet> packets) {
-		if (sender.id == p.destination)
-			continue;
 		for (Packet p : packets) {
 			if (sender.id == p.destination)
 				continue;
