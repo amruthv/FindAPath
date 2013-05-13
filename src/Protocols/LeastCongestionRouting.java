@@ -2,6 +2,8 @@ package Protocols;
 
 import java.util.List;
 
+import Metrics.LinkMetric;
+
 import network.Graph;
 import network.Node;
 import network.Packet;

@@ -23,7 +23,7 @@ public class LinkVariance implements Metric {
 		double var = 0;
 		for (double d : congests)
 			var += Math.pow(d - avg, 2);
-		return var;
+		return var / congests.size();
 	}
 
 }
