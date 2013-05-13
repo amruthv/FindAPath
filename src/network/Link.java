@@ -4,15 +4,17 @@ import java.util.HashSet;
 import java.util.Set;
 
 public class Link {
-	public Node fromNode;
-	public Node toNode;
+	public final Node fromNode;
+	public final Node toNode;
 	public Set<Packet> packets;
 	public int capacity;
-	public int maxCapacity = Integer.MAX_VALUE;
+	public final int maxCapacity = Integer.MAX_VALUE;
 	public double cost;
-	public int timesUsed=0;
+	public int timesUsed = 0;
 	
 	public Link(Node fromNode, Node toNode) {
+		if (fromNode == toNode)
+			throw new IllegalArgumentException("Self link!");
 		this.fromNode = fromNode;
 		this.toNode = toNode;
 		this.packets = new HashSet<Packet>();

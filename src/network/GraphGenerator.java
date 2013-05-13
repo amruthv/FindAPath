@@ -42,7 +42,7 @@ public class GraphGenerator {
 	
 	// nodes are given alpha_i distributed according power law with parameter p
 	// connect with prob = alpha * alpha[i] * alpha[j] * e ^ (-beta * distance)
-	public static Graph generatePrefGraph(int n, double alpha, double beta, double p, double[][] range, LinkMetric lm) {
+	public static Graph generatePrefGraph(int n, double alpha, double beta, double p, double[][] range) {
 		List<Node> nodes = makeRandomPoints(n, range);
 		double size = .5 * (range[0][1] - range[0][0] + range[1][1] - range[1][0]);
 		double[] alphas = getAlphas(n, p);
