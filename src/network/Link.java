@@ -1,44 +1,33 @@
 package network;
 
-import java.util.HashSet;
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.List;
 
 public class Link {
 	public final Node fromNode;
 	public final Node toNode;
-	public Set<Packet> packets;
-	public int capacity;
-	public final int maxCapacity = 300;
+	public List<Packet> packets;
+	public final int maxCapacity = 10;
 	public double cost;
 	public int timesUsed = 0;
 	
 	public Link(Node fromNode, Node toNode) {
 		if (fromNode == toNode)
 			throw new IllegalArgumentException("Self link!");
+		
 		this.fromNode = fromNode;
 		this.toNode = toNode;
-		this.packets = new HashSet<Packet>();
-		capacity = 0;
+		this.packets = new ArrayList<Packet>();
 		cost = fromNode.distance(toNode);
 	}
 	
-	
 	public void addPacket(Packet p) {
 		packets.add(p);
-		capacity++;
 		timesUsed++;
 	}
 	
-	public void removePacket(Packet p) {
-		if (!packets.contains(p))
-			throw new IllegalArgumentException("Link did not contain packet");
-		packets.remove(p);
-		capacity--;
-	}
-	
 	public void flushPackets(){
-		this.packets=new HashSet<Packet>();
-		capacity = 0;
+		packets.clear();
 	}
 	
 	public double length() {

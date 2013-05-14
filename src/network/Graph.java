@@ -1,15 +1,12 @@
 package network;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.PriorityQueue;
 
 import org.ejml.simple.SimpleMatrix;
 
-import utils.NodeIDDistPair;
 import Metrics.LinkMetric;
 
 public class Graph {
@@ -41,9 +38,7 @@ public class Graph {
 	
 	public void flushGraph(){
 		for (Node node: nodes){
-			for (Link inlink: node.inLinks){
-				inlink.flushPackets();
-			}
+			node.flush();
 		}
 //		this.nextNodeInPath = new HashMap<Integer, Map<Integer, Integer>>();
 //		this.shortestPaths = new HashMap<Integer, Map<Integer, List<Integer>>>();

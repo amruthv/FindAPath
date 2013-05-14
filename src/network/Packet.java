@@ -9,5 +9,4 @@ public class Packet {
 		this.source = source;
 		this.destination = destination;
 	}
-	
 }

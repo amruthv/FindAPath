@@ -20,51 +20,22 @@ public class Node {
 	public int id;
 	public double centrality;
 	public List<Packet> queue;
-    
-    
+	public int received;
+	public static final int maxQueue = 300;
+
 	public Node(double x, double y) {
 		loc = new Point(x, y);
 		inLinks = new ArrayList<Link>();
 		outLinks = new ArrayList<Link>();
 		neighbors = new HashSet<Node>();
 		selfTraffic = new HashMap<Integer, Integer>();
-		this.queue= new ArrayList<Packet>();
+		this.queue = new ArrayList<Packet>();
 	}
 
-    
-	public List<Packet> getInPackets() {
-		List<Packet> packets = new ArrayList<Packet>();
-		
-		for (int dest : selfTraffic.keySet()) {
-			for (int i = 0; i < selfTraffic.get(dest); i++)
-				packets.add(new Packet(id, dest));
-		}
-		
-		for (Link inLink : inLinks) {
-			for (Packet p: inLink.packets)
-				packets.add(p);
-			inLink.flushPackets();
-		}
-		
-		packets.addAll(queue);
-		
-		return packets;
-	}
-	
-	public int countInPackets() {
-		int count = 0;
-		for (int dest : selfTraffic.keySet())
-			count += selfTraffic.get(dest);
-		for (Link inLink : inLinks)
-			count += inLink.capacity;
-		count += queue.size();
-		return count;
-	}
-	
 	public void addLinks(Link outLink, Link inLink) {
 		if (!neighbors.add(outLink.toNode))
 			return;
-		
+
 		inLinks.add(inLink);
 		outLinks.add(outLink);
 	}
@@ -83,7 +54,7 @@ public class Node {
 	public Link getOutLinkToNode(int nextNodeID) {
 		if (neighbors.contains(nextNodeID))
 			return null;
-		
+
 		for (Link l : this.outLinks) {
 			if (l.toNode.id == nextNodeID) {
 				return l;
@@ -99,5 +70,31 @@ public class Node {
 
 	public String toString() {
 		return loc.toString();
+	}
+
+	public void flush() {
+		this.queue.clear();
+
+		for (Link inlink : inLinks) {
+			inlink.flushPackets();
+		}
+	}
+
+	public void loadPackets() {
+		for (int dest : selfTraffic.keySet()) {
+			for (int i = 0; i < selfTraffic.get(dest); i++)
+				queue.add(new Packet(id, dest));
+		}
+
+		for (Link inLink : inLinks) {
+			for (Packet p : inLink.packets) {
+				if (p.destination == id) 
+					received++;
+				else
+					queue.add(p);
+			}
+			inLink.flushPackets();
+		}
+
 	}
 }

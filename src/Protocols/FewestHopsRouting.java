@@ -1,8 +1,4 @@
 package Protocols;
-
-import java.util.Collections;
-import java.util.List;
-
 import Metrics.LinkMetric;
 
 import network.Graph;
@@ -12,35 +8,32 @@ import network.Packet;
 
 public class FewestHopsRouting extends RoutingProtocol {
 	
-	public Graph g;
+	public LinkMetric lm;
 	
-	public FewestHopsRouting(Graph g){
-		this.g = g;
-		lm = LinkMetric.hops;
+	public FewestHopsRouting(Graph g) {
+		super(g);
+		this.lm = LinkMetric.hops;
 	}
 	
-	@Override
-	public void route(Node sender, List<Packet> packets) {
-		Collections.shuffle(packets);
-		for (int i=0;i<packets.size();i++) {
-			if (sender.id == packets.get(i).destination){
-				g.packetsInNetwork -=1;
-				continue;
-			}
-			int nextNodeID = (g.nextNodeInPath.get(sender.id)).get(packets.get(i).destination);
-			Link linkToUse = sender.getOutLinkToNode(nextNodeID);
-			if (linkToUse.capacity <linkToUse.maxCapacity){
-				linkToUse.addPacket(packets.get(i));
-				packets.remove(i);
-				i--;
-			}
-		}
-		sender.queue=packets;
+	public void initialize() {
+		g.lm = lm;
+		g.calcShortestPaths();
+		g.computeAllWholePaths();
+	}
+
+	public void prepareGraph() {
+	}
+
+	public void prepareNode(Node sender) {
+	}
+
+	public Link routePacket(Node sender, Packet p) {
+		int nextNodeID = (g.nextNodeInPath.get(sender.id)).get(p.destination);
+		return sender.getOutLinkToNode(nextNodeID);
 	}
 	
-	@Override
 	public String toString(){
 		return "FewestHopsRouting";
 	}
-	
+
 }
