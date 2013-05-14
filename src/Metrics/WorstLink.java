@@ -11,7 +11,7 @@ public class WorstLink implements Metric {
 		double worst = 0;
 		for (Node node: g.nodes) {
 			for (Link link : node.outLinks)
-				worst = Math.max(worst, link.capacity);
+				worst = Math.max(worst, link.packets.size());
 		}
 		return worst;
 	}

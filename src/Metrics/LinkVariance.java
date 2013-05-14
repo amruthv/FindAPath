@@ -15,8 +15,8 @@ public class LinkVariance implements Metric {
 		double total = 0;
 		for (Node node : g.nodes) {
 			for (Link inLink : node.inLinks) {
-				congests.add((double) inLink.capacity);
-				total += inLink.capacity;
+				congests.add((double) inLink.packets.size());
+				total += inLink.packets.size();
 			}
 		}
 		double avg = total / congests.size();

@@ -1,8 +1,5 @@
 package Protocols;
 
-import java.util.Collections;
-import java.util.List;
-
 import network.Graph;
 import network.Link;
 import network.Node;
@@ -10,34 +7,44 @@ import network.Packet;
 import Metrics.LinkMetric;
 
 public class LeastBusyLinkRouting extends RoutingProtocol {
-	public Graph graph;
+	public LinkMetric lm;
 	
 	public LeastBusyLinkRouting(Graph g){
-		this.graph=g;
+		super(g);
 		this.lm=LinkMetric.cost;
-	}
-	
-	
+	}	
 	
 	@Override
-	public void route(Node sender, List<Packet> packets) {
-		Collections.shuffle(packets);
-		for (int i=0;i<packets.size();i++) {
-			if (sender.id == packets.get(i).destination){
-				graph.packetsInNetwork -= 1;
-				continue;
-			}
-			int nextNodeID = getLeastBusyLink(sender,packets.get(i).destination);
-			Link linkToUse = sender.getOutLinkToNode(nextNodeID);
-			if (linkToUse.capacity <linkToUse.maxCapacity){
-				linkToUse.addPacket(packets.get(i));
-				packets.remove(i);
-				i--;
-			}
-		}
-		sender.queue=packets;
+	public String toString() {
+		return "LeastBusyLinkRouter";
 	}
-	
+
+
+
+	@Override
+	public void initialize() {
+		g.lm = lm;
+		g.calcShortestPaths();
+		g.computeAllWholePaths();
+	}
+
+
+
+	@Override
+	public void prepareGraph() {	
+	}
+
+
+
+	@Override
+	public void prepareNode(Node sender) {		
+	}
+
+	@Override
+	public Link routePacket(Node sender, Packet p) {
+		int nextNodeID = getLeastBusyLink(sender,p.destination);
+		return sender.getOutLinkToNode(nextNodeID);
+	}
 	public int getLeastBusyLink(Node sender, int dest){
 		int minBusy = Integer.MAX_VALUE;
 		int minBusyID = -1;
@@ -45,8 +52,8 @@ public class LeastBusyLinkRouting extends RoutingProtocol {
 			Node neighbor = l.toNode;
 			if (neighbor.id == dest)
 				return dest;
-			if (graph.dist[neighbor.id][dest] < graph.dist[sender.id][dest] && l.capacity < minBusy) {
-				minBusy = l.capacity;
+			if (g.dist[neighbor.id][dest] < g.dist[sender.id][dest] && l.packets.size() < minBusy) {
+				minBusy = l.packets.size();
 				minBusyID = neighbor.id;
 			}
 		}
@@ -55,8 +62,4 @@ public class LeastBusyLinkRouting extends RoutingProtocol {
 		return minBusyID;
 	}
 	
-	@Override
-	public String toString() {
-		return "LeastBusyLinkRouter";
-	}
 }

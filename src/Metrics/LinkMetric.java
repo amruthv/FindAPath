@@ -16,13 +16,13 @@ public interface LinkMetric {
 	
 	static LinkMetric availableBandwidth = new LinkMetric() {
 		public double getCost(Link l) {
-			return l.capacity - l.packets.size();
+			return l.maxCapacity - l.packets.size();
 		}
 	};
 	
 	static LinkMetric congestion = new LinkMetric() {
 		public double getCost(Link l) {
-			return l.capacity;
+			return l.packets.size();
 		}
 	};
 	

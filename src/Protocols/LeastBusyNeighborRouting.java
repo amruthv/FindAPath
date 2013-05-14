@@ -1,9 +1,5 @@
 package Protocols;
 
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
-
 import network.Graph;
 import network.Link;
 import network.Node;
@@ -11,30 +7,38 @@ import network.Packet;
 import Metrics.LinkMetric;
 
 public class LeastBusyNeighborRouting extends RoutingProtocol {
-	public Graph graph;
+	public LinkMetric lm;
 	
 	public LeastBusyNeighborRouting(Graph g){
-		this.graph = g;
+		super(g);
 		this.lm = LinkMetric.cost;
 	}
 	
+	
 	@Override
-	public void route(Node sender, List<Packet> packets) {
-		Collections.shuffle(packets);
-		for (int i=0;i<packets.size();i++) {
-			if (sender.id == packets.get(i).destination){
-				graph.packetsInNetwork -= 1;
-				continue;
-			}
-			int nextNodeID = getLeastBusyNeighbor(sender,packets.get(i).destination);
-			Link linkToUse = sender.getOutLinkToNode(nextNodeID);
-			if (linkToUse.capacity <linkToUse.maxCapacity){
-				linkToUse.addPacket(packets.get(i));
-				packets.remove(i);
-				i--;
-			}
-		}
-		sender.queue=packets;
+	public String toString(){
+		return "LeastBusyNeighborRouting";
+	}
+
+	@Override
+	public void initialize() {
+		g.lm = lm;
+		g.calcShortestPaths();
+		g.computeAllWholePaths();
+	}
+
+	@Override
+	public void prepareGraph() {		
+	}
+
+	@Override
+	public void prepareNode(Node sender) {		
+	}
+
+	@Override
+	public Link routePacket(Node sender, Packet p) {
+		int nextNodeID = getLeastBusyNeighbor(sender,p.destination);
+		return sender.getOutLinkToNode(nextNodeID);
 	}
 	
 	public int getLeastBusyNeighbor(Node sender, int dest){
@@ -44,18 +48,13 @@ public class LeastBusyNeighborRouting extends RoutingProtocol {
 			Node neighbor = l.toNode;
 			if (neighbor.id == dest)
 				return dest;
-			if (graph.dist[neighbor.id][dest] < graph.dist[sender.id][dest] && neighbor.countInPackets() < minBusy) {
-				minBusy = neighbor.countInPackets();
+			if (g.dist[neighbor.id][dest] < g.dist[sender.id][dest] && neighbor.queue.size() < minBusy) {
+				minBusy = neighbor.queue.size();
 				minBusyID = neighbor.id;
 			}
 		}
 		if (minBusyID == -1)
 			throw new IllegalArgumentException("No closer node");
 		return minBusyID;
-	}
-	
-	@Override
-	public String toString(){
-		return "LeastBusyNeighborRouting";
 	}
 }

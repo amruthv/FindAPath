@@ -1,11 +1,7 @@
 package network;
 
 import vis.GraphView;
-import Metrics.LinkStDev;
-import Metrics.LinkVariance;
-import Metrics.Metric;
-import Metrics.SquaredSums;
-import Metrics.WorstLink;
+import Metrics.*;
 import Protocols.*;
 
 public class Main {
@@ -29,11 +25,11 @@ public class Main {
 	// public static Graph GRAPH = GraphGenerator.genHGraph(116, .4, 350);
 	// public static Graph GRAPH = GraphGenerator.generateCloseProbGraph(200, 10, 30, new double[][]{{-500, 500}, {-500, 500}});
 
-	//public static RoutingProtocol[] protocols = new RoutingProtocol[] { new FewestHopsRouting(GRAPH), new AvoidCentralityRouting(GRAPH), 
+public static RoutingProtocol[] protocols = new RoutingProtocol[] {new FewestHopsRouting(GRAPH), new AvoidCentralityRouting(GRAPH), new LeastBusyLinkRouting(GRAPH), new LeastBusyNeighborRouting(GRAPH), new LeastCongestionRouting(GRAPH),new RandomizedRouting(GRAPH)};
 	//	new LeastBusyNeighborRouting(GRAPH), new LeastBusyLinkRouting(GRAPH), new RandomizedRouting(GRAPH), new LeastCongestionRouting(GRAPH) };
-	public static RoutingProtocol[] protocols = new RoutingProtocol[] {new FewestHopsRouting(GRAPH)};
+//	public static RoutingProtocol[] protocols = new RoutingProtocol[] {new FewestHopsRouting(GRAPH)};
 		
-	public static Metric[] METRICS = new Metric[] { new WorstLink(), new SquaredSums(), new LinkVariance(), new LinkStDev() };
+	public static Metric[] METRICS = new Metric[] { new WorstLink(), new SquaredSums(), new LinkVariance(), new LinkStDev(), new TotalReceived() };
 
 	public static void runSolution(boolean dynamic) {
 		TrafficAssigner.assignPackets(GRAPH, 800);
@@ -43,10 +39,10 @@ public class Main {
 		for (RoutingProtocol p : protocols) {
 			r = new Router(GRAPH, p);
 			System.out.println("----------" + p.toString() + "----------");
-			for (int i = 0; i < 10000000; i++) {
-				r.routeAllNodes(1);
-				gv.repaint();
-				try{Thread.sleep(0);}catch (Exception e){};
+			for (int i = 0; i < 100; i++) {
+				r.routeAllNodes(10);
+//				gv.repaint();
+//				try{Thread.sleep(0);}catch (Exception e){};
 			}
 			
 			

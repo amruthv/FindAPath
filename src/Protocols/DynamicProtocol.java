@@ -1,20 +1,22 @@
 package Protocols;
 
 import java.util.ArrayList;
-import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.PriorityQueue;
-import java.util.Random;
 
 import network.Graph;
 import network.Link;
 import network.Node;
 import utils.NodeIDDistPair;
-import java.util.Comparator;
 
-public class DynamicProtocol extends RoutingProtocol {
+public abstract class DynamicProtocol extends RoutingProtocol {
+	public DynamicProtocol(Graph g) {
+		super(g);
+	}
+
 	public Map<Integer,Integer> sssp(Node source, Graph g){
 		int sID=source.id;
 		Map<Integer,Integer> nextNodeInPath = new HashMap<Integer,Integer>();

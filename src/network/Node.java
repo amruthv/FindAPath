@@ -74,7 +74,7 @@ public class Node {
 
 	public void flush() {
 		this.queue.clear();
-
+		received=0;
 		for (Link inlink : inLinks) {
 			inlink.flushPackets();
 		}

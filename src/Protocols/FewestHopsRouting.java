@@ -1,10 +1,9 @@
 package Protocols;
-import Metrics.LinkMetric;
-
 import network.Graph;
 import network.Link;
 import network.Node;
 import network.Packet;
+import Metrics.LinkMetric;
 
 public class FewestHopsRouting extends RoutingProtocol {
 	

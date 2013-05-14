@@ -11,7 +11,7 @@ public class SquaredSums implements Metric {
 		double total = 0;
 		for (Node node : g.nodes) {
 			for (Link inLink : node.inLinks)
-				total += Math.pow(inLink.capacity, 2);
+				total += Math.pow(inLink.packets.size(), 2);
 		}
 		return total;
 	}

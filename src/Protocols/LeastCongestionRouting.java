@@ -1,7 +1,5 @@
 package Protocols;
 
-import java.util.Collections;
-import java.util.List;
 import java.util.Map;
 
 import network.Graph;
@@ -11,37 +9,43 @@ import network.Packet;
 import Metrics.LinkMetric;
 
 public class LeastCongestionRouting extends DynamicProtocol {
-	public Graph graph;
+	public LinkMetric lm;
+	public Map<Integer,Integer> nextNodeInPath;
 	
 	public LeastCongestionRouting(Graph g){
-		this.graph = g;
+		super(g);
 		this.lm = LinkMetric.congestion;
-	}
-	
-	
-	
-	@Override
-	public void route(Node sender, List<Packet> packets) {
-		Map<Integer,Integer> nextNodeInPath = sssp(sender, graph);
-		Collections.shuffle(packets);
-		for (int i=0;i<packets.size();i++) {
-			if (sender.id == packets.get(i).destination){
-				graph.packetsInNetwork -=1;
-				continue;
-			}
-			int nextNodeID = (nextNodeInPath).get(packets.get(i).destination);
-			Link linkToUse = sender.getOutLinkToNode(nextNodeID);
-			if (linkToUse.capacity < linkToUse.maxCapacity){
-				linkToUse.addPacket(packets.get(i));
-				packets.remove(i);
-				i--;
-			}
-		}
-		sender.queue=packets;
 	}
 	
 	@Override
 	public String toString(){
 		return "LeastCongestionRouting";
+	}
+
+
+
+	@Override
+	public void initialize() {		
+	}
+
+
+
+	@Override
+	public void prepareGraph() {
+	}
+
+
+
+	@Override
+	public void prepareNode(Node sender) {
+		this.nextNodeInPath=sssp(sender,g);
+	}
+
+
+
+	@Override
+	public Link routePacket(Node sender, Packet p) {
+		int nextNodeID = (nextNodeInPath).get(p.destination);
+		return sender.getOutLinkToNode(nextNodeID);
 	}
 }
