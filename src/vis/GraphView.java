@@ -7,7 +7,6 @@ import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.RenderingHints;
-import java.awt.Shape;
 import java.awt.Stroke;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
@@ -19,8 +18,11 @@ import java.awt.event.MouseWheelListener;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.Ellipse2D;
 import java.awt.geom.Line2D;
-import java.awt.geom.Rectangle2D;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
 
+import javax.imageio.ImageIO;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 
@@ -53,14 +55,13 @@ public class GraphView extends JFrame {
 	private double x_min = X_MIN_INITIAL;
 	private double y_max = Y_MAX_INITIAL;
 	private double y_min = Y_MIN_INITIAL;
-	
+
 	private Color linkColor = Color.BLUE;
 	private Color packetColor = Color.RED;
 
 	private MyMouseListener ml = new MyMouseListener();
 
-	private class MyMouseListener implements MouseListener,
-			MouseMotionListener, MouseWheelListener, KeyListener {
+	private class MyMouseListener implements MouseListener, MouseMotionListener, MouseWheelListener, KeyListener {
 		private int[] start_drag = new int[2];
 
 		public void mouseClicked(MouseEvent e) {
@@ -204,12 +205,9 @@ public class GraphView extends JFrame {
 
 		public void paint(Graphics g2) {
 			Graphics2D g = (Graphics2D) g2;
-			g.setRenderingHint(RenderingHints.KEY_STROKE_CONTROL,
-					RenderingHints.VALUE_STROKE_NORMALIZE);
-			g.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
-					RenderingHints.VALUE_ANTIALIAS_ON);
-			g.setRenderingHint(RenderingHints.KEY_RENDERING,
-					RenderingHints.VALUE_RENDER_QUALITY);
+			g.setRenderingHint(RenderingHints.KEY_STROKE_CONTROL, RenderingHints.VALUE_STROKE_NORMALIZE);
+			g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+			g.setRenderingHint(RenderingHints.KEY_RENDERING, RenderingHints.VALUE_RENDER_QUALITY);
 
 			// g.fillRect(0, 0, FRAME_WIDTH, FRAME_HEIGHT);
 			g.setColor(Color.black);
@@ -219,16 +217,15 @@ public class GraphView extends JFrame {
 			double yscale = FRAME_HEIGHT / (y_max - y_min);
 			AffineTransform t = new AffineTransform();
 			t.scale(1.0, -1.0);
-			t.translate(FRAME_WIDTH / 2 - ((x_min + x_max) / 2.0 * xscale),
-					-FRAME_WIDTH / 2 - ((y_min + y_max) / 2.0 * yscale));
+			t.translate(FRAME_WIDTH / 2 - ((x_min + x_max) / 2.0 * xscale), -FRAME_WIDTH / 2 - ((y_min + y_max) / 2.0 * yscale));
 			t.scale(xscale, yscale);
 			g.setTransform(t);
 
-			g.setStroke(new BasicStroke(1.0f));
+			g.setStroke(new BasicStroke(2.0f));
 
 			// draw the grid
-			drawGrid(g);
-			drawAxes(g);
+			//drawGrid(g);
+			//drawAxes(g);
 
 			paintLinks(g);
 			paintNodes(g);
@@ -242,36 +239,32 @@ public class GraphView extends JFrame {
 				for (int i = 0; i < n.inLinks.size(); i++) {
 					in = n.inLinks.get(i);
 					out = n.outLinks.get(i);
-					
 
 					if (out.toNode.id < n.id)
 						continue;
-					
-					
-					g.setStroke(new BasicStroke((float)(2)));
+
+					g.setStroke(new BasicStroke((float) (2)));
 					paintLink(g, out, linkColor);
-					//g.setStroke(new BasicStroke((float)(5*Math.random()*Math.random())));
-					//g.setStroke(new BasicStroke(1f));
-					//paintLink(g, l, Color.white);
-					//continue;
-					
-					
-					
+					// g.setStroke(new BasicStroke((float)(5*Math.random()*Math.random())));
+					// g.setStroke(new BasicStroke(1f));
+					// paintLink(g, l, Color.white);
+					// continue;
+
 					int total = in.packets.size() + out.packets.size();
 					if (total == 0)
 						continue;
-					double width = (out.length()/total)-4;
-					if (width < 0) {width = 0;}
-					
-					
-					BasicStroke stroke = new BasicStroke(4.0f, BasicStroke.CAP_BUTT, BasicStroke.JOIN_MITER,
-					        10.0f, new float[]{4.0f, (float)(width)}, 0.0f);
+					double width = (out.length() * 2 / total) - 4;
+					if (width < 0) {
+						width = 0;
+					}
+
+					BasicStroke stroke = new BasicStroke(4.0f, BasicStroke.CAP_BUTT, BasicStroke.JOIN_MITER, 10.0f, new float[] { 4.0f, (float) (width) }, 0.0f);
 					g.setStroke(stroke);
-					
+
 					paintLink(g, out, packetColor);
 				}
 			}
-			
+
 			g.setStroke(s);
 		}
 
@@ -283,18 +276,18 @@ public class GraphView extends JFrame {
 
 			double max = Utils.getMax(cent);
 			double min = Utils.getMin(cent);
-			
+
 			Node n;
-		
-			for (int i = 0 ; i < graph.nodes.size(); i++) {
+
+			for (int i = 0; i < graph.nodes.size(); i++) {
 				n = graph.nodes.get(i);
-				paintPoint(g, n.loc, getColoring(cent[i], .65, min, max), 7 + 10*(cent[i]-min)/(max-min));
+				paintPoint(g, n.loc, getColoring(cent[i], .65, min, max), 10 + 15 * (cent[i] - min) / (max - min));
 			}
 		}
-		
+
 		public Color getColoring(double value, double range, double min, double max) {
-			double h = range-((value-min)/(max-min)*range);
-			return Color.getHSBColor((float)h, (float)1.0, (float)1.0);
+			double h = range - ((value - min) / (max - min) * range);
+			return Color.getHSBColor((float) h, (float) 1.0, (float) 1.0);
 		}
 
 		// draw edge
@@ -306,9 +299,9 @@ public class GraphView extends JFrame {
 		// draws a poing on the graph in a particular color
 		private void paintPoint(Graphics2D g, Point p, Color c, double size) {
 			g.setColor(c);
-			g.fill(new Ellipse2D.Double(p.x-size/2, p.y-size/2, size, size));
+			g.fill(new Ellipse2D.Double(p.x - size / 2, p.y - size / 2, size, size));
 			g.setColor(linkColor);
-			g.draw(new Ellipse2D.Double(p.x-size/2, p.y-size/2, size, size));
+			g.draw(new Ellipse2D.Double(p.x - size / 2, p.y - size / 2, size, size));
 		}
 
 		/**
@@ -319,16 +312,10 @@ public class GraphView extends JFrame {
 			g.setColor(Color.GREEN);
 
 			for (double i = x_min - 2 * x_step; i <= x_max + 2 * x_step; i += x_step) {
-				g.drawLine((int) (Math.round(i)),
-						(int) (Math.round(y_min - 2 * y_step)),
-						(int) (Math.round(i)),
-						(int) (Math.round(y_max + 2 * y_step)));
+				g.drawLine((int) (Math.round(i)), (int) (Math.round(y_min - 2 * y_step)), (int) (Math.round(i)), (int) (Math.round(y_max + 2 * y_step)));
 			}
 			for (double i = y_min - 2 * y_step; i <= y_max + 2 * y_step; i += y_step) {
-				g.drawLine((int) (Math.round(x_min - 2 * x_step)),
-						(int) (Math.round(i)),
-						(int) (Math.round(x_max + 2 * x_step)),
-						(int) (Math.round(i)));
+				g.drawLine((int) (Math.round(x_min - 2 * x_step)), (int) (Math.round(i)), (int) (Math.round(x_max + 2 * x_step)), (int) (Math.round(i)));
 			}
 			g.setColor(orig);
 		}
@@ -339,16 +326,25 @@ public class GraphView extends JFrame {
 		private void drawAxes(Graphics2D g) {
 			Color orig = g.getColor();
 			g.setColor(Color.BLACK);
-			g.drawLine((int) (Math.round(x_min - 2 * x_step)),
-					(int) (Math.round(0)),
-					(int) (Math.round(x_max + 2 * x_step)),
-					(int) (Math.round(0)));
-			g.drawLine((int) (Math.round(0)),
-					(int) (Math.round(y_min - 2 * y_step)),
-					(int) (Math.round(0)),
-					(int) (Math.round(y_max + 2 * y_step)));
+			g.drawLine((int) (Math.round(x_min - 2 * x_step)), (int) (Math.round(0)), (int) (Math.round(x_max + 2 * x_step)), (int) (Math.round(0)));
+			g.drawLine((int) (Math.round(0)), (int) (Math.round(y_min - 2 * y_step)), (int) (Math.round(0)), (int) (Math.round(y_max + 2 * y_step)));
 
 			g.setColor(orig);
+		}
+	}
+
+	public void renderToImage(String fileName) {
+		BufferedImage bImg = new BufferedImage(p.getWidth(), p.getWidth(), BufferedImage.TYPE_INT_RGB);
+		Graphics2D cg = bImg.createGraphics();
+		cg.setBackground(Color.white);
+		cg.clearRect(0, 0, p.getWidth(), p.getHeight());
+		p.paintAll(cg);
+		try {
+			if (ImageIO.write(bImg, "png", new File(fileName))) {
+				System.out.println("-- saved");
+			}
+		} catch (IOException e) {
+			e.printStackTrace();
 		}
 	}
 }

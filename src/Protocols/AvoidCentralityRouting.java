@@ -18,7 +18,6 @@ public class AvoidCentralityRouting extends RoutingProtocol {
 		lm = LinkMetric.centrality;
 	}
 	
-	@Override
 	public void route(Node sender, List<Packet> packets) {
 		Collections.shuffle(packets);
 		for (int i=0;i<packets.size();i++) {
@@ -37,10 +36,7 @@ public class AvoidCentralityRouting extends RoutingProtocol {
 		sender.queue=packets;
 	}
 	
-	@Override
 	public String toString(){
 		return "AvoidCentralityRouting";
 	}
-	
-
 }

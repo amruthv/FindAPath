@@ -21,7 +21,7 @@ public class Main {
         //Graph g = GraphGenerator.generateHierachGraph(20, .6, .6, new double[][] {{-25,25},{-25,25}}, LinkMetric.centrality, false);
         new GraphView(g);
     }
-   
+    
     public static Graph GRAPH = GraphGenerator.generatePrefGraph(200, 5, 30, 2.5, new double[][]{{-500, 500}, {-500, 500}});
 //    public static Graph GRAPH = GraphGenerator.generateCloseConnectGraph(100, .05, new double[][]{{-500, 500}, {-500, 500}});
     //public static Graph GRAPH = GraphGenerator.generateCloseProbGraph(200, 10, 30, new double[][]{{-500, 500}, {-500, 500}});
@@ -42,12 +42,14 @@ public class Main {
     public static void runSolution(boolean dynamic) {
     	//new GraphView(GRAPH);
     	TrafficAssigner.assignPackets(GRAPH, 800);
+    	GraphView gv = new GraphView(GRAPH);
     	for (RoutingProtocol p: protocols){
     		System.out.println("----------"+p.toString()+"----------");
     		ROUTER.routeAllNodes(200, p);
     		for (Metric m : METRICS) 
         		System.out.println(m.toString()+ m.score(GRAPH));
-//            new GraphView(GRAPH);
+
+    		gv.renderToImage("renders/img_" + p.getClass().getName() + ".png");
     	}    	
     }
 }
