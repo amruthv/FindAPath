@@ -26,6 +26,8 @@ import javax.imageio.ImageIO;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 
+import Metrics.LinkMetric;
+
 import network.Graph;
 import network.Link;
 import network.Node;
@@ -58,6 +60,12 @@ public class GraphView extends JFrame {
 
 	private Color linkColor = Color.BLUE;
 	private Color packetColor = Color.RED;
+
+	public enum NodeColoring {
+		DEG, KATZ, PAGE, HOP_BET, QUEUE, Q_RATE
+	};
+
+	public NodeColoring coloring = NodeColoring.QUEUE;
 
 	private MyMouseListener ml = new MyMouseListener();
 
@@ -217,15 +225,16 @@ public class GraphView extends JFrame {
 			double yscale = FRAME_HEIGHT / (y_max - y_min);
 			AffineTransform t = new AffineTransform();
 			t.scale(1.0, -1.0);
-			t.translate(FRAME_WIDTH / 2 - ((x_min + x_max) / 2.0 * xscale), -FRAME_WIDTH / 2 - ((y_min + y_max) / 2.0 * yscale));
+			t.translate(FRAME_WIDTH / 2 - ((x_min + x_max) / 2.0 * xscale), -FRAME_WIDTH / 2
+					- ((y_min + y_max) / 2.0 * yscale));
 			t.scale(xscale, yscale);
 			g.setTransform(t);
 
 			g.setStroke(new BasicStroke(2.0f));
 
 			// draw the grid
-			//drawGrid(g);
-			//drawAxes(g);
+			// drawGrid(g);
+			// drawAxes(g);
 
 			paintLinks(g);
 			paintNodes(g);
@@ -235,7 +244,7 @@ public class GraphView extends JFrame {
 		private void paintLinks(Graphics2D g) {
 			Stroke s = g.getStroke();
 			Link in, out;
-			
+
 			int max = 0;
 			for (Node n : graph.nodes) {
 				for (int i = 0; i < n.inLinks.size(); i++) {
@@ -249,7 +258,7 @@ public class GraphView extends JFrame {
 						max = total;
 				}
 			}
-			
+
 			for (Node n : graph.nodes) {
 				for (int i = 0; i < n.inLinks.size(); i++) {
 					in = n.inLinks.get(i);
@@ -264,12 +273,13 @@ public class GraphView extends JFrame {
 					int total = in.packets.size() + out.packets.size();
 					if (total == 0)
 						continue;
-					double width = max-total;
+					double width = max - total;
 					if (width < 0) {
 						width = 0;
 					}
 
-					BasicStroke stroke = new BasicStroke(4.0f, BasicStroke.CAP_BUTT, BasicStroke.JOIN_MITER, 10.0f, new float[] { 4.0f, (float) (width) }, 0.0f);
+					BasicStroke stroke = new BasicStroke(4.0f, BasicStroke.CAP_BUTT, BasicStroke.JOIN_MITER, 10.0f,
+							new float[] { 4.0f, (float) (width) }, 0.0f);
 					g.setStroke(stroke);
 
 					paintLink(g, out, packetColor);
@@ -279,26 +289,51 @@ public class GraphView extends JFrame {
 			g.setStroke(s);
 		}
 
+		public double[] getColoringScores() {
+			switch (coloring) {
+			case DEG:
+				return graph.calcDegreeCentrality();
+			case KATZ:
+				return graph.calcKatzCentrality(.05);
+			case PAGE:
+				return graph.calcPageRank(.99);
+			case HOP_BET:
+				return graph.calcBetweenessCentrality(LinkMetric.hops);
+			case QUEUE:
+				double[] queues = new double[graph.nodes.size()];
+				for (int i = 0; i < graph.nodes.size(); i++)
+					queues[i] = graph.nodes.get(i).queue.size();
+				return queues;
+			case Q_RATE:
+				double[] qRate = new double[graph.nodes.size()];
+				Node n;
+				for (int i = 0; i < graph.nodes.size(); i++) {
+					n = graph.nodes.get(i);
+					for (Link l : n.inLinks)
+						qRate[i] += l.packets.size();
+					for (Link l : n.outLinks)
+						qRate[i] -= l.packets.size();
+					for (Integer t : n.selfTraffic.values())
+						qRate[i] += t;
+				}
+				return qRate;
+			default:
+				return null;
+			}
+		}
+
 		private void paintNodes(Graphics2D g) {
-			// double[] cent = graph.calcDegreeCentrality();
-			//double[] cent = graph.calcKatzCentrality(.05);
-			//double[] cent = graph.calcPageRank(.999);
-			// double[] cent = graph.calcBetweenessCentrality();
-			double[] cent = new double[graph.nodes.size()];
-			for (int i = 0 ; i < graph.nodes.size(); i++)
-				cent[i] = graph.nodes.get(i).queue.size();
-			
-			
+			double[] cent = getColoringScores();
 			double max = Utils.getMax(cent);
 			double min = Utils.getMin(cent);
-			double range = max-min;
+			double range = max - min;
 			if (range == 0)
 				range = 1;
 
 			Node n;
 
 			for (int i = 0; i < graph.nodes.size(); i++) {
-				//System.out.println(cent[i]);
+				// System.out.println(cent[i]);
 				n = graph.nodes.get(i);
 				paintPoint(g, n.loc, getColoring(cent[i], .65, min, max), 8 + 12 * (cent[i] - min) / range);
 			}
@@ -331,10 +366,12 @@ public class GraphView extends JFrame {
 			g.setColor(Color.GREEN);
 
 			for (double i = x_min - 2 * x_step; i <= x_max + 2 * x_step; i += x_step) {
-				g.drawLine((int) (Math.round(i)), (int) (Math.round(y_min - 2 * y_step)), (int) (Math.round(i)), (int) (Math.round(y_max + 2 * y_step)));
+				g.drawLine((int) (Math.round(i)), (int) (Math.round(y_min - 2 * y_step)), (int) (Math.round(i)),
+						(int) (Math.round(y_max + 2 * y_step)));
 			}
 			for (double i = y_min - 2 * y_step; i <= y_max + 2 * y_step; i += y_step) {
-				g.drawLine((int) (Math.round(x_min - 2 * x_step)), (int) (Math.round(i)), (int) (Math.round(x_max + 2 * x_step)), (int) (Math.round(i)));
+				g.drawLine((int) (Math.round(x_min - 2 * x_step)), (int) (Math.round(i)),
+						(int) (Math.round(x_max + 2 * x_step)), (int) (Math.round(i)));
 			}
 			g.setColor(orig);
 		}
@@ -345,22 +382,27 @@ public class GraphView extends JFrame {
 		private void drawAxes(Graphics2D g) {
 			Color orig = g.getColor();
 			g.setColor(Color.BLACK);
-			g.drawLine((int) (Math.round(x_min - 2 * x_step)), (int) (Math.round(0)), (int) (Math.round(x_max + 2 * x_step)), (int) (Math.round(0)));
-			g.drawLine((int) (Math.round(0)), (int) (Math.round(y_min - 2 * y_step)), (int) (Math.round(0)), (int) (Math.round(y_max + 2 * y_step)));
+			g.drawLine((int) (Math.round(x_min - 2 * x_step)), (int) (Math.round(0)),
+					(int) (Math.round(x_max + 2 * x_step)), (int) (Math.round(0)));
+			g.drawLine((int) (Math.round(0)), (int) (Math.round(y_min - 2 * y_step)), (int) (Math.round(0)),
+					(int) (Math.round(y_max + 2 * y_step)));
 
 			g.setColor(orig);
 		}
 	}
 
-	public void renderToImage(String fileName) {
+	public void renderToImage(String fileName, NodeColoring coloring) {
+		this.coloring = coloring;
+		
 		BufferedImage bImg = new BufferedImage(p.getWidth(), p.getWidth(), BufferedImage.TYPE_INT_RGB);
 		Graphics2D cg = bImg.createGraphics();
 		cg.setBackground(Color.white);
 		cg.clearRect(0, 0, p.getWidth(), p.getHeight());
 		p.paintAll(cg);
+		new File(fileName).mkdirs();
 		try {
 			if (ImageIO.write(bImg, "png", new File(fileName))) {
-//				System.out.println("-- saved");
+				// System.out.println("-- saved");
 			}
 		} catch (IOException e) {
 			e.printStackTrace();

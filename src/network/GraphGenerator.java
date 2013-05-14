@@ -13,7 +13,7 @@ public class GraphGenerator {
 	// range is [[xLow, xHigh], [yLow, yHigh]]
 
 	// connects if distance < threshold
-	public static Graph generateCloseConnectGraph(int n, double threshold, double[][] range) {
+	public static Graph generateCloseConnectGraph(int n, double threshold, double[][] range, int capacity) {
 		List<Node> nodes = makeRandomPoints(n, range);
 		double size = .5 * (range[0][1] - range[0][0] + range[1][1] - range[1][0]);
 		for (int i = 0; i < n; i++) {
@@ -21,14 +21,14 @@ public class GraphGenerator {
 				Node n1 = nodes.get(i);
 				Node n2 = nodes.get(j);
 				if (n1.distance(n2) / size <= threshold)
-					connect(n1, n2);
+					connect(n1, n2, capacity);
 			}
 		}
 		return new Graph(nodes);
 	}
 
 	// connects with prob = alpha * e ^ (-beta * distance)
-	public static Graph generateCloseProbGraph(int n, double alpha, double beta, double[][] range) {
+	public static Graph generateCloseProbGraph(int n, double alpha, double beta, double[][] range, int capacity) {
 		List<Node> nodes = makeRandomPoints(n, range);
 		double size = .5 * (range[0][1] - range[0][0] + range[1][1] - range[1][0]);
 		for (int i = 0; i < n; i++) {
@@ -36,7 +36,7 @@ public class GraphGenerator {
 				Node n1 = nodes.get(i);
 				Node n2 = nodes.get(j);
 				if (Math.random() < alpha * Math.pow(Math.E, -beta * n1.distance(n2) / size))
-					connect(n1, n2);
+					connect(n1, n2, capacity);
 			}
 		}
 		return new Graph(nodes);
@@ -44,7 +44,7 @@ public class GraphGenerator {
 
 	// nodes are given alpha_i distributed according power law with parameter p
 	// connect with prob = alpha * alpha[i] * alpha[j] * e ^ (-beta * distance)
-	public static Graph generatePrefGraph(int n, double alpha, double beta, double p, double[][] range) {
+	public static Graph generatePrefGraph(int n, double alpha, double beta, double p, double[][] range, int capacity) {
 		List<Node> nodes = makeRandomPoints(n, range);
 		double size = .5 * (range[0][1] - range[0][0] + range[1][1] - range[1][0]);
 		double[] alphas = getAlphas(n, p);
@@ -53,27 +53,27 @@ public class GraphGenerator {
 				Node n1 = nodes.get(i);
 				Node n2 = nodes.get(j);
 				if (Math.random() < alpha * Math.pow(alphas[i] * alphas[j], .7) * Math.pow(Math.E, -beta * n1.distance(n2) / size))
-					connect(n1, n2);
+					connect(n1, n2, capacity);
 			}
 		}
 		return new Graph(nodes);
 	}
 
-	public static Graph generateHierachGraph(int n, double alpha, double beta, double[][] range) {
+	public static Graph generateHierachGraph(int n, double alpha, double beta, double[][] range, int capacity) {
 		int m = (int) Math.sqrt(n);
 		double size = .5 * (range[0][1] - range[0][0] + range[1][1] - range[1][0]);
-		Graph layout = generateCloseProbGraph(m, alpha, beta, range);
+		Graph layout = generateCloseProbGraph(m, alpha, beta, range, capacity*m);
 
 		Graph[] subGraphs = new Graph[m];
 		for (int i = 0; i < m; i++)
-			subGraphs[i] = generateCloseProbGraph(m, alpha, beta, getRangeOfNode(layout.nodes.get(i), m, size));
+			subGraphs[i] = generateCloseProbGraph(m, alpha, beta, getRangeOfNode(layout.nodes.get(i), m, size), capacity);
 		Node[][] connectionPoints = getConnectionPoints(subGraphs);
 
 		for (int i = 0; i < m; i++) {
 			for (int j = 0; j < i; j++) {
 				if (layout.nodes.get(i).inLinks.contains(layout.nodes.get(j))) {
-					connect(connectionPoints[i][0], connectionPoints[j][0]);
-					connect(connectionPoints[i][1], connectionPoints[j][1]);
+					connect(connectionPoints[i][0], connectionPoints[j][0], capacity);
+					connect(connectionPoints[i][1], connectionPoints[j][1], capacity);
 				}
 			}
 		}
@@ -84,7 +84,7 @@ public class GraphGenerator {
 		return new Graph(finalNodes);
 	}
 
-	public static Graph genHGraph(int n, double alpha, double radius) {
+	public static Graph genHGraph(int n, double alpha, double radius, int capacity) {
 		int m = (int) Math.sqrt(n);
 
 		List<Node> topNodes = makeRandomPoints(m, 0, 0, radius);
@@ -93,20 +93,20 @@ public class GraphGenerator {
 		for (Node node : topNodes)
 			allNodes.addAll(makeRandomPoints(m, node.loc.x, node.loc.y, radius/m*2));
 		
-		rangeConnect(allNodes, alpha*radius/m*2*2);
-		rangeConnect(topNodes, alpha*radius*2);
+		rangeConnect(allNodes, alpha*radius/m*2*2, capacity*m);
+		rangeConnect(topNodes, alpha*radius*2, capacity);
 		
 
 		return new Graph(allNodes);
 	}
 
-	public static void rangeConnect(List<Node> nodes, double range) {
+	public static void rangeConnect(List<Node> nodes, double range, int capacity) {
 		for (int i = 0; i < nodes.size(); i++) {
 			for (int j = 0; j < i; j++) {
 				Node n1 = nodes.get(i);
 				Node n2 = nodes.get(j);
 				if (n1.distance(n2) <= range)
-					connect(n1, n2);
+					connect(n1, n2, capacity);
 			}
 		}
 	}
@@ -158,9 +158,9 @@ public class GraphGenerator {
 		return low + Math.random() * (high - low);
 	}
 
-	public static void connect(Node n1, Node n2) {
-		Link link1 = new Link(n1, n2);
-		Link link2 = new Link(n2, n1);
+	public static void connect(Node n1, Node n2, int capacity) {
+		Link link1 = new Link(n1, n2, capacity);
+		Link link2 = new Link(n2, n1, capacity);
 		n1.addLinks(link1, link2);
 		n2.addLinks(link2, link1);
 	}

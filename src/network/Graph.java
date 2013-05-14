@@ -288,6 +288,17 @@ public class Graph {
 		return 0;
 	}
 
+
+	public SimpleMatrix getWeightedAdjacencyMatrix() {
+		SimpleMatrix a = new SimpleMatrix(nodes.size(), nodes.size());
+		for (Node n : nodes)
+			for (Link l : n.outLinks)
+				a.set(n.id, l.toNode.id, l.maxCapacity/10);
+
+		return a;
+	}
+
+	
 	public SimpleMatrix getAdjacencyMatrix() {
 		SimpleMatrix a = new SimpleMatrix(nodes.size(), nodes.size());
 		for (Node n : nodes)

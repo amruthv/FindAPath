@@ -46,14 +46,14 @@ public class LeastBusyLinkRouting extends RoutingProtocol {
 		return sender.getOutLinkToNode(nextNodeID);
 	}
 	public int getLeastBusyLink(Node sender, int dest){
-		int minBusy = Integer.MAX_VALUE;
+		double minBusy = Double.MAX_VALUE;
 		int minBusyID = -1;
 		for (Link l: sender.outLinks) {
 			Node neighbor = l.toNode;
 			if (neighbor.id == dest)
 				return dest;
 			if (g.dist[neighbor.id][dest] < g.dist[sender.id][dest] && l.packets.size() < minBusy) {
-				minBusy = l.packets.size();
+				minBusy = ((double)l.packets.size())/l.maxCapacity;
 				minBusyID = neighbor.id;
 			}
 		}

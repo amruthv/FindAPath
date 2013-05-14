@@ -11,7 +11,7 @@ public class Link {
 	public double cost;
 	public int timesUsed = 0;
 	
-	public Link(Node fromNode, Node toNode) {
+	public Link(Node fromNode, Node toNode, int capacity) {
 		if (fromNode == toNode)
 			throw new IllegalArgumentException("Self link!");
 		
