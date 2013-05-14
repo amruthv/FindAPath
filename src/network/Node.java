@@ -96,4 +96,8 @@ public class Node {
 	public boolean equals(Node node) {
 		return this.id == node.id;
 	}
+
+	public String toString() {
+		return loc.toString();
+	}
 }

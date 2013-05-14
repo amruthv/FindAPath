@@ -235,6 +235,21 @@ public class GraphView extends JFrame {
 		private void paintLinks(Graphics2D g) {
 			Stroke s = g.getStroke();
 			Link in, out;
+			
+			int max = 0;
+			for (Node n : graph.nodes) {
+				for (int i = 0; i < n.inLinks.size(); i++) {
+					in = n.inLinks.get(i);
+					out = n.outLinks.get(i);
+
+					if (out.toNode.id < n.id)
+						continue;
+					int total = in.packets.size() + out.packets.size();
+					if (total > max)
+						max = total;
+				}
+			}
+			
 			for (Node n : graph.nodes) {
 				for (int i = 0; i < n.inLinks.size(); i++) {
 					in = n.inLinks.get(i);
@@ -245,15 +260,11 @@ public class GraphView extends JFrame {
 
 					g.setStroke(new BasicStroke((float) (2)));
 					paintLink(g, out, linkColor);
-					// g.setStroke(new BasicStroke((float)(5*Math.random()*Math.random())));
-					// g.setStroke(new BasicStroke(1f));
-					// paintLink(g, l, Color.white);
-					// continue;
 
 					int total = in.packets.size() + out.packets.size();
 					if (total == 0)
 						continue;
-					double width = (out.length() * 2 / total) - 4;
+					double width = max-total;
 					if (width < 0) {
 						width = 0;
 					}
@@ -269,19 +280,22 @@ public class GraphView extends JFrame {
 		}
 
 		private void paintNodes(Graphics2D g) {
-			//double[] cent = graph.calcDegreeCentrality();
+			// double[] cent = graph.calcDegreeCentrality();
 			//double[] cent = graph.calcKatzCentrality(.05);
 			double[] cent = graph.calcPageRank(.999);
-			//double[] cent = graph.calcBetweenessCentrality();
+			// double[] cent = graph.calcBetweenessCentrality();
 
 			double max = Utils.getMax(cent);
 			double min = Utils.getMin(cent);
+			double range = max-min;
+			if (range == 0)
+				range = 1;
 
 			Node n;
 
 			for (int i = 0; i < graph.nodes.size(); i++) {
 				n = graph.nodes.get(i);
-				paintPoint(g, n.loc, getColoring(cent[i], .65, min, max), 10 + 15 * (cent[i] - min) / (max - min));
+				paintPoint(g, n.loc, getColoring(cent[i], .65, min, max), 8 + 12 * (cent[i] - min) / range);
 			}
 		}
 
