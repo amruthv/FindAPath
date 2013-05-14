@@ -360,7 +360,7 @@ public class GraphView extends JFrame {
 		p.paintAll(cg);
 		try {
 			if (ImageIO.write(bImg, "png", new File(fileName))) {
-				System.out.println("-- saved");
+//				System.out.println("-- saved");
 			}
 		} catch (IOException e) {
 			e.printStackTrace();

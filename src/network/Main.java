@@ -45,16 +45,17 @@ public class Main {
 
 		for (RoutingProtocol p : protocols) {
 			r = new Router(GRAPH, p);
-			System.out.println("----------" + p.toString() + "----------");
+//			System.out.println("----------" + p.toString() + "----------");
 			for (int i = 0; i < 100; i++) {
 				r.routeAllNodes(10);
 				// gv.repaint();
 				// try{Thread.sleep(0);}catch (Exception e){};
 			}
-
+			System.out.print("=split(\"");
+			System.out.print(p.toString()+",");
 			for (Metric m : METRICS)
-				System.out.println(m.toString() + m.score(GRAPH));
-
+				System.out.print(m.score(GRAPH)+",");
+			System.out.println("\"),\",\")");
 			gv.renderToImage("renders/img_" + p.toString() + ".png");
 		}
 	}
