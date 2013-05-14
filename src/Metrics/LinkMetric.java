@@ -77,6 +77,34 @@ public interface LinkMetric {
 		public String toString() {return "PageRank99";};
 	};
 	
+	static LinkMetric hopBetweeness = new LinkMetric() {
+		public double getCost(Graph g, Link l) {
+			return Math.log(g.calcBetweenessCentrality(hops)[l.toNode.id]);
+		}
+		public String toString() {return "HopBetweeness";};
+	};
+
+	static LinkMetric degBetweeness = new LinkMetric() {
+		public double getCost(Graph g, Link l) {
+			return Math.log(g.calcBetweenessCentrality(degreeCentrality)[l.toNode.id]);
+		}
+		public String toString() {return "degBetweeness";};
+	};
+
+	static LinkMetric katzBetweeness = new LinkMetric() {
+		public double getCost(Graph g, Link l) {
+			return Math.log(g.calcBetweenessCentrality(katzCentrality10)[l.toNode.id]);
+		}
+		public String toString() {return "KatzBetweeness";};
+	};
+	
+	static LinkMetric prankBetweeness = new LinkMetric() {
+		public double getCost(Graph g, Link l) {
+			return Math.log(g.calcBetweenessCentrality(pageRank50)[l.toNode.id]);
+		}
+		public String toString() {return "prankBetweeness";};
+	};
+	
 	static LinkMetric hops = new LinkMetric() {
 		public double getCost(Graph g, Link l) {
 			return 1.0;

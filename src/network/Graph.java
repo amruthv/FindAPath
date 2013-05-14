@@ -24,6 +24,7 @@ public class Graph {
 	public double[] degreeCentrality = null;
 	public double[] katzCentrality = null;
 	public double[] pageRank = null;
+	public double[] betweenessCentrality = null;
 
 	public Graph(List<Node> nodes) {
 		this.nodes = nodes;
@@ -44,6 +45,8 @@ public class Graph {
 		for (Node node: nodes){
 			node.flush();
 		}
+		
+		this.betweenessCentrality = null;
 //		this.nextNodeInPath = new HashMap<Integer, Map<Integer, Integer>>();
 //		this.shortestPaths = new HashMap<Integer, Map<Integer, List<Integer>>>();
 //		this.numNodes = this.nodes.size();
@@ -255,22 +258,29 @@ public class Graph {
 		return pageRank;
 	}
 
-	public double[] calcBetweenessCentrality() {
+	public double[] calcBetweenessCentrality(LinkMetric lm) {
+		if (betweenessCentrality != null)
+			return betweenessCentrality;
+		
+		LinkMetric tempLm = this.lm;
+		this.lm = lm;
 		calcShortestPaths();
 		computeAllWholePaths();
 	
-		double[] result = new double[nodes.size()];
-	
+		betweenessCentrality = new double[nodes.size()];
 	
 		for (Map<Integer, List<Integer>> paths : shortestPaths.values()) {
 			for (List<Integer> path : paths.values()) {
 				for (Integer id : path) {
-					result[id]++;
+					betweenessCentrality[id]++;
 				}
 			}
 		}
 	
-		return result;
+		this.lm = tempLm;
+		calcShortestPaths();
+		computeAllWholePaths();
+		return betweenessCentrality;
 	}
 
 
