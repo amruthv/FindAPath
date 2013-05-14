@@ -1,6 +1,7 @@
 package Protocols;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 import network.Graph;
@@ -19,14 +20,21 @@ public class LeastBusyNeighborRouting extends RoutingProtocol {
 	
 	@Override
 	public void route(Node sender, List<Packet> packets) {
-		for (Packet p : packets) {
-			if (sender.id == p.destination){
-				graph.packetsInNetwork -=1;
+		Collections.shuffle(packets);
+		for (int i=0;i<packets.size();i++) {
+			if (sender.id == packets.get(i).destination){
+				graph.packetsInNetwork -= 1;
 				continue;
 			}
-			int nextNodeID = getLeastBusyNeighbor(sender, p.destination);
-			sender.getOutLinkToNode(nextNodeID).addPacket(p);
+			int nextNodeID = getLeastBusyNeighbor(sender,packets.get(i).destination);
+			Link linkToUse = sender.getOutLinkToNode(nextNodeID);
+			if (linkToUse.capacity <linkToUse.maxCapacity){
+				linkToUse.addPacket(packets.get(i));
+				packets.remove(i);
+				i--;
+			}
 		}
+		sender.queue=packets;
 	}
 	
 	public int getLeastBusyNeighbor(Node sender, int dest){

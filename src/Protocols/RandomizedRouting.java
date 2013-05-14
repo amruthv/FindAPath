@@ -1,6 +1,7 @@
 package Protocols;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Random;
 
@@ -20,14 +21,21 @@ public class RandomizedRouting extends RoutingProtocol {
 	
 	@Override
 	public void route(Node sender, List<Packet> packets) {
-		for (Packet p : packets) {
-			if (sender.id == p.destination){
+		Collections.shuffle(packets);
+		for (int i=0; i<packets.size(); i++) {
+			if (sender.id == packets.get(i).destination){
 				graph.packetsInNetwork -=1;
 				continue;
 			}
-			int nextNodeID = getRandomCloserNeighbor(sender, p.destination);
-			sender.getOutLinkToNode(nextNodeID).addPacket(p);
+			int nextNodeID = getRandomCloserNeighbor(sender, packets.get(i).destination);
+			Link linkToUse = sender.getOutLinkToNode(nextNodeID);
+			if (linkToUse.capacity < linkToUse.maxCapacity){
+				linkToUse.addPacket(packets.get(i));
+				packets.remove(i);
+				i--;
+			}			
 		}
+		sender.queue=packets;
 	}
 	
 	public int getRandomCloserNeighbor(Node node, int dest) {

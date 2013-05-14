@@ -25,5 +25,10 @@ public class LinkVariance implements Metric {
 			var += Math.pow(d - avg, 2);
 		return var / congests.size();
 	}
+	
+	@Override
+	public String toString(){
+		return "Link Variance: ";
+	}
 
 }

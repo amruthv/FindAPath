@@ -8,7 +8,7 @@ public class Link {
 	public final Node toNode;
 	public Set<Packet> packets;
 	public int capacity;
-	public final int maxCapacity = Integer.MAX_VALUE;
+	public final int maxCapacity = 300;
 	public double cost;
 	public int timesUsed = 0;
 	

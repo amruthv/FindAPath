@@ -16,4 +16,8 @@ public class WorstLink implements Metric {
 		return worst;
 	}
 	
+	@Override
+	public String toString(){
+		return "WorstLink: ";
+	}
 }

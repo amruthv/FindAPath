@@ -19,6 +19,7 @@ public class Node {
 	public final Map<Integer, Integer> selfTraffic;
 	public int id;
 	public double centrality;
+	public List<Packet> queue;
     
     
 	public Node(double x, double y) {
@@ -27,6 +28,7 @@ public class Node {
 		outLinks = new ArrayList<Link>();
 		neighbors = new HashSet<Node>();
 		selfTraffic = new HashMap<Integer, Integer>();
+		this.queue= new ArrayList<Packet>();
 	}
 
     
@@ -44,6 +46,8 @@ public class Node {
 			inLink.flushPackets();
 		}
 		
+		packets.addAll(queue);
+		
 		return packets;
 	}
 	
@@ -53,6 +57,7 @@ public class Node {
 			count += selfTraffic.get(dest);
 		for (Link inLink : inLinks)
 			count += inLink.capacity;
+		count += queue.size();
 		return count;
 	}
 	

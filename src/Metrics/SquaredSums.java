@@ -15,5 +15,10 @@ public class SquaredSums implements Metric {
 		}
 		return total;
 	}
+	
+	@Override
+	public String toString(){
+		return "SquaredSum: ";
+	}
 
 }

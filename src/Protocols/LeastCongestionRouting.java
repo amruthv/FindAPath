@@ -1,13 +1,14 @@
 package Protocols;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
-import Metrics.LinkMetric;
-
 import network.Graph;
+import network.Link;
 import network.Node;
 import network.Packet;
+import Metrics.LinkMetric;
 
 public class LeastCongestionRouting extends DynamicProtocol {
 	public Graph graph;
@@ -22,14 +23,21 @@ public class LeastCongestionRouting extends DynamicProtocol {
 	@Override
 	public void route(Node sender, List<Packet> packets) {
 		Map<Integer,Integer> nextNodeInPath = sssp(sender, graph);
-		for (Packet p : packets) {
-			if (sender.id == p.destination){
+		Collections.shuffle(packets);
+		for (int i=0;i<packets.size();i++) {
+			if (sender.id == packets.get(i).destination){
 				graph.packetsInNetwork -=1;
 				continue;
 			}
-			int nextNodeID = (nextNodeInPath).get(p.destination);
-			sender.getOutLinkToNode(nextNodeID).addPacket(p);
+			int nextNodeID = (nextNodeInPath).get(packets.get(i).destination);
+			Link linkToUse = sender.getOutLinkToNode(nextNodeID);
+			if (linkToUse.capacity < linkToUse.maxCapacity){
+				linkToUse.addPacket(packets.get(i));
+				packets.remove(i);
+				i--;
+			}
 		}
+		sender.queue=packets;
 	}
 	
 	@Override

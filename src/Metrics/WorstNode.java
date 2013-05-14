@@ -13,4 +13,8 @@ public class WorstNode implements Metric {
 		return most;
 	}
 
+	@Override
+	public String toString(){
+		return "Worst Node: ";
+	}
 }
