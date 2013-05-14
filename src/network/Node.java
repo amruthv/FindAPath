@@ -9,8 +9,6 @@ import java.util.Set;
 
 import utils.Point;
 
-//NODE IDS START AT 0
-
 public class Node {
 	public final Point loc;
 	public final List<Link> inLinks;
@@ -18,7 +16,6 @@ public class Node {
 	public final Set<Node> neighbors;
 	public final Map<Integer, Integer> selfTraffic;
 	public int id;
-	public double centrality;
 	public List<Packet> queue;
 	public int received;
 	public static final int maxQueue = 300;

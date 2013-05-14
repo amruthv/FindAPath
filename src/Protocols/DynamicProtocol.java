@@ -57,7 +57,7 @@ public abstract class DynamicProtocol extends RoutingProtocol {
 			for (Link l:g.nodes.get(min.id).outLinks){
 				int neighborID = l.toNode.id;
 				double neighborCost=pairs.get(neighborID).dist;
-				double newPathCost =  min.dist + g.lm.getCost(l)+1000;
+				double newPathCost =  min.dist + g.lm.getCost(g,l)+1000;
 				if (neighborCost > newPathCost){
 					NodeIDDistPair neighborToUpdate= pairs.get(neighborID);
 					distances.remove(neighborToUpdate);

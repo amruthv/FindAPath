@@ -5,13 +5,13 @@ import network.Node;
 import network.Packet;
 import Metrics.LinkMetric;
 
-public class FewestHopsRouting extends RoutingProtocol {
+public class StaticRouteProtocol extends RoutingProtocol {
 	
 	public LinkMetric lm;
-	
-	public FewestHopsRouting(Graph g) {
+		
+	public StaticRouteProtocol(Graph g, LinkMetric lm) {
 		super(g);
-		this.lm = LinkMetric.hops;
+		this.lm = lm;
 	}
 	
 	public void initialize() {
@@ -32,7 +32,7 @@ public class FewestHopsRouting extends RoutingProtocol {
 	}
 	
 	public String toString(){
-		return "FewestHopsRouting";
+		return "Static_" + lm.toString();
 	}
 
 }

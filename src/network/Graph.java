@@ -20,6 +20,10 @@ public class Graph {
 	public LinkMetric lm;
 	int[][] adjacency;
 	public int packetsInNetwork;
+	
+	public double[] degreeCentrality = null;
+	public double[] katzCentrality = null;
+	public double[] pageRank = null;
 
 	public Graph(List<Node> nodes) {
 		this.nodes = nodes;
@@ -49,9 +53,6 @@ public class Graph {
 	}
 	
 	public void calcShortestPaths() {
-		if (lm == LinkMetric.centrality)
-			setCentralities();
-
 		// Initialize all distances to infinity
 		for (int i = 0; i < numNodes; i++) {
 			for (int j = 0; j < numNodes; j++) {
@@ -77,7 +78,7 @@ public class Graph {
 			List<Link> outedges = node.outLinks;
 			for (Link outlink : outedges) {
 				if (outlink.fromNode.id != outlink.toNode.id) {
-					dist[outlink.fromNode.id][outlink.toNode.id] = lm.getCost(outlink);
+					dist[outlink.fromNode.id][outlink.toNode.id] = lm.getCost(this, outlink);
 				}
 			}
 		}
@@ -194,32 +195,20 @@ public class Graph {
 	}
 
 	public double[] calcDegreeCentrality() {
-		double[] result = new double[nodes.size()];
+		if (degreeCentrality != null)
+			return degreeCentrality;
+		
+		double[] degreeCentrality = new double[nodes.size()];
 		for (int i = 0; i < nodes.size(); i++)
-			result[i] = nodes.get(i).inLinks.size() / (double) nodes.size();
+			degreeCentrality[i] = nodes.get(i).inLinks.size() / (double) nodes.size();
 		;
-		return result;
-	}
-
-	public double[] calcBetweenessCentrality() {
-		calcShortestPaths();
-		computeAllWholePaths();
-
-		double[] result = new double[nodes.size()];
-
-
-		for (Map<Integer, List<Integer>> paths : shortestPaths.values()) {
-			for (List<Integer> path : paths.values()) {
-				for (Integer id : path) {
-					result[id]++;
-				}
-			}
-		}
-
-		return result;
+		return degreeCentrality;
 	}
 
 	public double[] calcKatzCentrality(double alpha) {
+		if (katzCentrality != null)
+			return katzCentrality;
+		
 		int n = nodes.size();
 
 		SimpleMatrix a = getAdjacencyMatrix();
@@ -230,22 +219,17 @@ public class Graph {
 		SimpleMatrix katz = SimpleMatrix.identity(n);
 		katz = katz.minus(a.scale(alpha).transpose()).invert().mult(v);
 
-		double[] result = new double[n];
+		katzCentrality = new double[n];
 		for (int i = 0; i < n; i++)
-			result[i] = katz.get(i, 0);
+			katzCentrality[i] = katz.get(i, 0);
 
-		return result;
-	}
-
-	public void setCentralities() {
-		double[] centralities = calcPageRank(.5);
-		//System.out.println(Arrays.toString(centralities));
-		//double[] centralities = calcBetweenessCentrality();
-		for (int i = 0; i < numNodes; i++)
-			nodes.get(i).centrality = centralities[i];
+		return katzCentrality;
 	}
 
 	public double[] calcPageRank(double alpha) {
+		if (pageRank != null)
+			return pageRank;
+		
 		int n = nodes.size();
 
 		SimpleMatrix a = getAdjacencyMatrix();
@@ -264,16 +248,31 @@ public class Graph {
 		prank = degIdent.minus(a.scale(alpha).transpose());
 		prank = degIdent.mult(prank.invert()).mult(v);
 
-		double[] result = new double[n];
+		pageRank = new double[n];
 		for (int i = 0; i < n; i++)
-			result[i] = prank.get(i, 0);
+			pageRank[i] = prank.get(i, 0);
 
+		return pageRank;
+	}
+
+	public double[] calcBetweenessCentrality() {
+		calcShortestPaths();
+		computeAllWholePaths();
+	
+		double[] result = new double[nodes.size()];
+	
+	
+		for (Map<Integer, List<Integer>> paths : shortestPaths.values()) {
+			for (List<Integer> path : paths.values()) {
+				for (Integer id : path) {
+					result[id]++;
+				}
+			}
+		}
+	
 		return result;
 	}
 
-	public double[] calcEigenvectorCentrality() {
-		return null;
-	}
 
 	public double calcClusteringCoeff() {
 		return 0;
