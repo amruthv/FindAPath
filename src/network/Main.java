@@ -21,13 +21,12 @@ public class Main {
         new GraphView(g);
     }
     
-    public static Graph GRAPH = GraphGenerator.generateCloseConnectGraph(100, .2, new double[][]{{-500, 500}, {-500, 500}});
+    public static Graph GRAPH = GraphGenerator.generateCloseConnectGraph(100, .05, new double[][]{{-500, 500}, {-500, 500}});
     //public static Graph GRAPH = GraphGenerator.generateCloseProbGraph(200, 10, 30, new double[][]{{-500, 500}, {-500, 500}});
-    //public static Graph GRAPH = GraphGenerator.generatePrefGraph(200, 2, 20, 3, new double[][]{{-500, 500}, {-500, 500}});
+    //public static Graph GRAPH = GraphGenerator.generatePrefGraph(200, 1.2, 20, 3, new double[][]{{-500, 500}, {-500, 500}});
     public static RoutingProtocol[] protocols = new RoutingProtocol[]{new FewestHopsRouting(GRAPH), 
     	new AvoidCentralityRouting(GRAPH),
     	new LeastBusyNeighborRouting(GRAPH),
-    	new LeastBusyLinkRouting(GRAPH),
     	new RandomizedRouting(GRAPH), 
     	new LeastCongestionRouting(GRAPH)};
 //    public static RoutingProtocol[] protocols = new RoutingProtocol[]{new LeastBusyNeighborRouting(GRAPH)};
@@ -50,7 +49,7 @@ public class Main {
     		for (Metric m : METRICS) 
         		System.out.println(m.score(GRAPH));
             //new GraphView(GRAPH);
-    	}    	
+    	}  	
     }
     
 }
