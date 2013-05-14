@@ -13,8 +13,8 @@ public class LeastCongestionRouting extends DynamicProtocol {
 	public Graph graph;
 	
 	public LeastCongestionRouting(Graph g){
-		this.graph=g;
-		this.lm=LinkMetric.congestion;
+		this.graph = g;
+		this.lm = LinkMetric.congestion;
 	}
 	
 	
