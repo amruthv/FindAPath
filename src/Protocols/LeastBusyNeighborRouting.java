@@ -14,8 +14,8 @@ public class LeastBusyNeighborRouting extends RoutingProtocol {
 	public Graph graph;
 	
 	public LeastBusyNeighborRouting(Graph g){
-		this.graph=g;
-		this.lm=LinkMetric.cost;
+		this.graph = g;
+		this.lm = LinkMetric.cost;
 	}
 	
 	@Override

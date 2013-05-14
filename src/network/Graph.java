@@ -1,6 +1,7 @@
 package network;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -9,12 +10,11 @@ import java.util.PriorityQueue;
 import org.ejml.simple.SimpleMatrix;
 
 import utils.NodeIDDistPair;
-
 import Metrics.LinkMetric;
 
 public class Graph {
 
-	public List<Node> nodes;
+	public final List<Node> nodes;
 	public Map<Integer, Map<Integer, Integer>> nextNodeInPath;
 	public Map<Integer, Map<Integer, List<Integer>>> shortestPaths;
 	public double[][] dist;
@@ -35,6 +35,8 @@ public class Graph {
 
 		for (int i = 0; i < nodes.size(); i++)
 			nodes.get(i).id = i;
+		lm = LinkMetric.cost;
+		calcShortestPaths();
 	}
 	
 	public void flushGraph(){
@@ -241,7 +243,9 @@ public class Graph {
 	}
 
 	public void setCentralities() {
-		double[] centralities = calcPageRank(.25);
+		double[] centralities = calcPageRank(.5);
+		//System.out.println(Arrays.toString(centralities));
+		//double[] centralities = calcBetweenessCentrality();
 		for (int i = 0; i < numNodes; i++)
 			nodes.get(i).centrality = centralities[i];
 	}

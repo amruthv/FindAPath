@@ -1,8 +1,5 @@
 package network;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import Protocols.RoutingProtocol;
 
 public class Router {

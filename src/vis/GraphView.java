@@ -278,8 +278,8 @@ public class GraphView extends JFrame {
 		private void paintNodes(Graphics2D g) {
 			//double[] cent = graph.calcDegreeCentrality();
 			//double[] cent = graph.calcKatzCentrality(.05);
-			//double[] cent = graph.calcPageRank(.999);
-			double[] cent = graph.calcBetweenessCentrality();
+			double[] cent = graph.calcPageRank(.999);
+			//double[] cent = graph.calcBetweenessCentrality();
 
 			double max = Utils.getMax(cent);
 			double min = Utils.getMin(cent);
