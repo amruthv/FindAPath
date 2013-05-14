@@ -21,8 +21,10 @@ public class RandomizedRouting extends RoutingProtocol {
 	@Override
 	public void route(Node sender, List<Packet> packets) {
 		for (Packet p : packets) {
-			if (sender.id == p.destination)
+			if (sender.id == p.destination){
+				graph.packetsInNetwork -=1;
 				continue;
+			}
 			int nextNodeID = getRandomCloserNeighbor(sender, p.destination);
 			sender.getOutLinkToNode(nextNodeID).addPacket(p);
 		}

@@ -19,7 +19,7 @@ public class Link {
 		this.toNode = toNode;
 		this.packets = new HashSet<Packet>();
 		capacity = 0;
-		cost = 1;//fromNode.distance(toNode);
+		cost = fromNode.distance(toNode);
 	}
 	
 	

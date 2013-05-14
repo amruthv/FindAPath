@@ -15,13 +15,19 @@ public class Router {
 		graph.flushGraph();
 		graph.lm = protocol.lm;
 		graph.calcShortestPaths();
+		graph.computeAllWholePaths();
 		for (int i = 0; i < numTimes; i++) {
 			if (i%100==0){
 				System.out.println(i);
 			}
-			for (Node sender : graph.nodes)
-					protocol.route(sender, sender.getInPackets());
+			for (Node sender : graph.nodes){
+				protocol.route(sender, sender.getInPackets());
+				for (int numPacketsForDest : sender.selfTraffic.values()){
+					graph.packetsInNetwork += numPacketsForDest;
+				}
+			}
 		}
+		System.out.println("#packets in network: "+graph.packetsInNetwork);
 	}
 	
 }

@@ -22,8 +22,10 @@ public class LeastBusyLinkRouting extends RoutingProtocol {
 	@Override
 	public void route(Node sender, List<Packet> packets) {
 		for (Packet p : packets) {
-			if (p.destination == sender.id)
+			if (sender.id == p.destination){
+				graph.packetsInNetwork -=1;
 				continue;
+			}
 			int nextNodeID = getLeastBusyLink(sender, p.destination);
 			sender.getOutLinkToNode(nextNodeID).addPacket(p);
 		}

@@ -21,10 +21,12 @@ public class LeastCongestionRouting extends DynamicProtocol {
 	
 	@Override
 	public void route(Node sender, List<Packet> packets) {
+		Map<Integer,Integer> nextNodeInPath = sssp(sender, graph);
 		for (Packet p : packets) {
-			if (sender.id == p.destination)
+			if (sender.id == p.destination){
+				graph.packetsInNetwork -=1;
 				continue;
-			Map<Integer,Integer> nextNodeInPath = sssp(sender, graph);
+			}
 			int nextNodeID = (nextNodeInPath).get(p.destination);
 			sender.getOutLinkToNode(nextNodeID).addPacket(p);
 		}

@@ -43,7 +43,7 @@ public class Main {
     		ROUTER.routeAllNodes(200, p);
     		for (Metric m : METRICS) 
         		System.out.println(m.score(GRAPH));
-            new GraphView(GRAPH);
+//            new GraphView(GRAPH);
     	}    	
     }
     
