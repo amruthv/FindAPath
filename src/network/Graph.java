@@ -295,9 +295,9 @@ public class Graph {
 	}
 
 	public void setCentralities() {
-		//double[] centralities = calcPageRank(.5);
+		double[] centralities = calcPageRank(.5);
 		//System.out.println(Arrays.toString(centralities));
-		double[] centralities = calcBetweenessCentrality();
+		//double[] centralities = calcBetweenessCentrality();
 		for (int i = 0; i < numNodes; i++)
 			nodes.get(i).centrality = centralities[i];
 	}
