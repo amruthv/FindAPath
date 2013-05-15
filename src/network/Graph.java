@@ -2,6 +2,7 @@ package network;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 
@@ -307,5 +308,10 @@ public class Graph {
 
 		return a;
 	}
-
+	
+	public void keepLargestComponent() {
+		ArrayList<HashSet<Node>> components = new ArrayList<HashSet<Node>>();
+		HashSet<Node> nodes = new HashSet<Node>();
+		nodes.addAll(this.nodes);
+	}
 }

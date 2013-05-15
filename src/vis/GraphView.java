@@ -62,7 +62,7 @@ public class GraphView extends JFrame {
 	private Color packetColor = Color.RED;
 
 	public enum NodeColoring {
-		DEG, KATZ, PAGE, HOP_BET, QUEUE, Q_RATE
+		DEG, KATZ, PAGE, HOP_BET, QUEUE, Q_RATE, FLOW
 	};
 
 	public NodeColoring coloring = NodeColoring.QUEUE;
@@ -296,7 +296,7 @@ public class GraphView extends JFrame {
 			case KATZ:
 				return graph.calcKatzCentrality(.05);
 			case PAGE:
-				return graph.calcPageRank(.99);
+				return graph.calcPageRank(.25);
 			case HOP_BET:
 				return graph.calcBetweenessCentrality(LinkMetric.hops);
 			case QUEUE:
@@ -317,6 +317,12 @@ public class GraphView extends JFrame {
 						qRate[i] += t;
 				}
 				return qRate;
+			case FLOW:
+				double[] flow = new double[graph.nodes.size()];
+				for (int i = 0; i < graph.nodes.size(); i++)
+					for (Link l : graph.nodes.get(i).outLinks)
+						flow[i] += l.packets.size();
+				return flow;
 			default:
 				return null;
 			}

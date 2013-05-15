@@ -21,9 +21,9 @@ public class Main {
 	}
 
 	static Graph GRAPH = GraphGenerator.generatePrefGraph(150, 5, 30, 2.5, new double[][] { { -350, 350 },{ -350, 350 }}, 10);
-	//static Graph GRAPH = GraphGenerator.generateCloseConnectGraph(300, .1, new double[][] { { -350, 350 },{ -350, 350 }}, 10);
+	//static Graph GRAPH = GraphGenerator.generateCloseConnectGraph(200, .12, new double[][] { { -350, 350 },{ -350, 350 }}, 10);
 	//static Graph GRAPH = GraphGenerator.genHGraph(116, .4, 350, 10);
-	//static Graph GRAPH = GraphGenerator.generateCloseProbGraph(200, 10, 30, new double[][]{{-500, 500}, {-500, 500}});
+	//static Graph GRAPH = GraphGenerator.generateCloseProbGraph(200, 2, 20, new double[][]{{-350, 350}, {-350, 350}}, 10);
 	//static Graph GRAPH = GraphGenerator.generateHierachGraph(250, 5, 5, new double[][] {{-350,350},{-350,350}}, 10);
 	
 	
@@ -52,7 +52,7 @@ public class Main {
 			new LinkStDev(), new TotalReceived() };
 
 	public static void runSolution(boolean dynamic) {
-		TrafficAssigner.assignPackets(GRAPH, 800);
+		TrafficAssigner.assignPackets(GRAPH, 2000);
 		GraphView gv = new GraphView(GRAPH);
 		Router r;
 
@@ -84,6 +84,7 @@ public class Main {
 			System.out.println("\",\",\")");
 			gv.renderToImage("renders/" + time + "/img_q_" + p.toString() + ".png", GraphView.NodeColoring.QUEUE);
 			gv.renderToImage("renders/" + time + "/img_qr_" + p.toString() + ".png", GraphView.NodeColoring.Q_RATE);
+			gv.renderToImage("renders/" + time + "/img_f_" + p.toString() + ".png", GraphView.NodeColoring.FLOW);
 		}
 	}
 }
