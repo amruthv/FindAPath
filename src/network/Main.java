@@ -48,7 +48,7 @@ public class Main {
 	// new LeastBusyNeighborRouting(GRAPH), new LeastBusyLinkRouting(GRAPH), new RandomizedRouting(GRAPH), new LeastCongestionRouting(GRAPH) };
 	// public static RoutingProtocol[] protocols = new RoutingProtocol[] {new FewestHopsRouting(GRAPH)};
 
-	public static Metric[] METRICS = new Metric[] { new WorstLink(), new SquaredSums(), new LinkVariance(),
+	public static Metric[] METRICS = new Metric[] {new WorstNode(), new WorstLink(), new SquaredSums(),
 			new LinkStDev(), new TotalReceived() };
 
 	public static void runSolution(boolean dynamic) {

@@ -14,7 +14,7 @@ public class RandomizedRouting extends RoutingProtocol {
 	public LinkMetric lm;
 	public RandomizedRouting(Graph g) {
 		super(g);
-		this.lm = LinkMetric.cost;
+		this.lm = LinkMetric.hops;
 	}
 	
 	

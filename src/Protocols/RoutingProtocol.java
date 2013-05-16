@@ -28,6 +28,7 @@ public abstract class RoutingProtocol {
 		
 		while (queue.size() > sender.maxQueue)
 			queue.remove(0);
+		sender.dropped++;
 		
 		for (int i=0;i<queue.size();i++) {
 			linkToUse = routePacket(sender, queue.get(i));

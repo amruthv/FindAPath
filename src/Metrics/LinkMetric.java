@@ -112,6 +112,5 @@ public interface LinkMetric {
 		public String toString() {return "Hops";};
 	};
 	
-	
 	public double getCost(Graph g, Link l);
 }

@@ -9,7 +9,7 @@ public class WorstNode implements Metric {
 	public double score(Graph g) {
 		double most = 0;
 		for (Node node : g.nodes) 
-			most = Math.max(most, node.queue.size());
+			most = Math.max(most, node.dropped+node.queue.size());
 		return most;
 	}
 

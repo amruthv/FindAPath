@@ -18,6 +18,7 @@ public class Node {
 	public int id;
 	public List<Packet> queue;
 	public int received;
+	public int dropped=0;
 	public static final int maxQueue = 300;
 
 	public Node(double x, double y) {
@@ -72,6 +73,7 @@ public class Node {
 	public void flush() {
 		this.queue.clear();
 		received=0;
+		dropped=0;
 		for (Link inlink : inLinks) {
 			inlink.flushPackets();
 		}
